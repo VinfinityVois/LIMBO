@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>П.Р.И.Н.Ц. // Досье персонала</title>
+  <link rel="stylesheet" href="css/system.css">
+  <style>
+    .dossier-filters {
+      display: flex; flex-wrap: wrap; gap: 0.45rem;
+      margin-bottom: 1.4rem; align-items: center;
+    }
+    .dossier-filters .btn { padding: 0.4rem 0.85rem; font-size: 0.66rem; }
+    .dossier-filters .btn.active {
+      background: var(--cyan); color: var(--void); border-color: var(--cyan);
+    }
+    .stats-bar {
+      display: flex; gap: 1.4rem; flex-wrap: wrap;
+      margin-bottom: 1.4rem;
+      font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim);
+    }
+    .stats-bar strong { color: var(--cyan); }
+
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 1.15rem;
+    }
+    .char-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.35s, transform 0.4s var(--ease);
+      position: relative;
+    }
+    .char-card:hover {
+      border-color: var(--border-strong);
+      box-shadow: 0 14px 48px rgba(0,0,0,0.45);
+      transform: translateY(-6px);
+    }
+    .char-card.critical { border-color: rgba(224, 40, 72, 0.32); }
+    .char-card.anomaly { border-color: rgba(155, 0, 212, 0.38); }
+
+    .char-visual {
+      position: relative; height: 270px;
+      background: linear-gradient(160deg, #100828 0%, #05020c 100%);
+      overflow: hidden;
+    }
+    .char-visual img {
+      width: 100%; height: 100%; object-fit: cover; object-position: top center;
+      opacity: 0.9; transition: transform 0.6s var(--ease), opacity 0.4s;
+    }
+    .char-card:hover .char-visual img { transform: scale(1.05); opacity: 1; }
+    .char-visual .placeholder-code {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 2.8rem; font-weight: 800;
+      color: rgba(0, 212, 232, 0.11); letter-spacing: 0.08em;
+      transition: color 0.4s;
+    }
+    .char-card:hover .placeholder-code { color: rgba(0, 212, 232, 0.2); }
+    .char-status-bar {
+      position: absolute; top: 0.7rem; left: 0.7rem; right: 0.7rem;
+      display: flex; justify-content: space-between; align-items: flex-start; z-index: 2;
+    }
+    .char-body { padding: 1.1rem 1.15rem 1.25rem; }
+    .char-id {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      color: var(--text-muted); letter-spacing: 0.08em; margin-bottom: 0.2rem;
+    }
+    .char-name {
+      font-family: var(--font-display); font-size: 1.12rem; font-weight: 700;
+      letter-spacing: 0.04em; margin-bottom: 0.25rem;
+    }
+    .char-role {
+      font-size: 0.7rem; color: var(--pink); letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 0.65rem;
+    }
+    .char-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.75rem; }
+    .char-meta-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.35rem; margin-bottom: 0.8rem;
+      font-family: var(--font-mono); font-size: 0.66rem;
+    }
+    .char-meta-row .m-label { color: var(--text-muted); display: block; font-size: 0.58rem; }
+    .char-meta-row .m-val { color: var(--text); }
+    .char-bio {
+      font-size: 0.82rem; color: var(--text-dim); font-weight: 300;
+      line-height: 1.5; margin-bottom: 0.85rem;
+    }
+    .char-psi {
+      font-family: var(--font-mono); font-size: 0.68rem;
+      display: flex; justify-content: space-between; margin-bottom: 0.3rem;
+    }
+    .char-actions { display: flex; gap: 0.45rem; margin-top: 0.85rem; }
+    .char-actions .btn { flex: 1; justify-content: center; padding: 0.48rem; font-size: 0.62rem; }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <header class="sys-topbar">
+    <a href="terminal.html" class="brand">П.Р.И.Н.Ц.<span> // ЛИМБО</span></a>
+    <div class="status-pill"><span class="dot"></span> ЯДРО СИНХРОНИЗИРОВАНО</div>
+    <nav class="sys-nav">
+      <a href="terminal.html">Терминал</a>
+      <a href="dossier.html" class="active">Досье</a>
+      <a href="scenes.html">Архив сцен</a>
+      <a href="polygon.html">Полигон</a>
+    </nav>
+    <div class="right-meta">
+      <span class="sec-level">SEC:LVL_5</span>
+      <span>ОПЕРАТОР: A-55</span>
+    </div>
+  </header>
+
+  <main class="sys-page">
+    <div class="sys-header reveal">
+      <div class="eyebrow">Система Лимбо // Реестр субъектов // [Архив_активен]</div>
+      <h1>Досье персонала и Смотрящих <span class="accent" style="font-size:0.65em;">[V.09.4]</span></h1>
+      <p class="desc">Центральный узел надзора · Класс доступа S-A · Карантинная зона: АКТИВНА</p>
+    </div>
+
+    <div class="stats-bar reveal">
+      <span>В РЕЕСТРЕ <strong>06</strong></span>
+      <span>СМОТРЯЩИЕ <strong>03</strong></span>
+      <span>АССИСТЕНТЫ <strong>02</strong></span>
+      <span>ZERO-КЛАСС <strong>01</strong></span>
+      <span>СИНХРОНИЗАЦИЯ <strong>99.82%</strong></span>
+    </div>
+
+    <div class="dossier-filters reveal">
+      <button class="btn active" data-cursor>Все субъекты (6)</button>
+      <button class="btn" data-cursor>Восточный штаб (4)</button>
+      <button class="btn" data-cursor>Западный штаб (2)</button>
+      <button class="btn" data-cursor>Аномалии / Zero (1)</button>
+    </div>
+
+    <div class="char-grid">
+      <article class="char-card reveal" data-cursor>
+        <div class="char-visual">
+          <img src="image.png" alt="Хэ Ючоу">
+          <div class="char-status-bar">
+            <span class="tag tag-green">СМОТРЯЩИЙ A-55</span>
+            <span class="tag">NOMINAL</span>
+          </div>
+        </div>
+        <div class="char-body">
+          <div class="char-id">СУБЪЕКТ #001</div>
+          <h3 class="char-name">Хэ Ючоу</h3>
+          <div class="char-role">Смотрящий A-55 · Восточный штаб</div>
+          <div class="char-tags">
+            <span class="tag">#ВОСТОЧНЫЙ_ШТАБ</span>
+            <span class="tag">#ЭЛИТНЫЙ_НАДЗИРАТЕЛЬ</span>
+            <span class="tag">#ЭКС_ПОЛИЦИЯ</span>
+          </div>
+          <div class="char-meta-row">
+            <div><span class="m-label">Возраст</span><span class="m-val">27 лет</span></div>
+            <div><span class="m-label">Дата рожд.</span><span class="m-val">07.10</span></div>
+            <div><span class="m-label">Синхр.</span><span class="m-val" style="color:var(--green)">94.2%</span></div>
+          </div>
+          <p class="char-bio">Один из самых результативных следователей спецподразделения, досрочно ушедший в отставку в 24 года после засекреченного инцидента. Переведён в Восточный штаб в качестве Смотрящего.</p>
+          <div class="char-psi"><span>Пси-стабильность</span><span style="color:var(--green)">97% · ОПТИМАЛЬНАЯ</span></div>
+          <div class="bar"><div class="bar-fill" style="width:97%"></div></div>
+          <div class="char-actions"><button class="btn">Развернуть дело #01</button></div>
+        </div>
+      </article>
+
+      <article class="char-card critical reveal reveal-d1" data-cursor>
+        <div class="char-visual">
+          <div class="placeholder-code" style="color:rgba(224,40,72,0.14)">A-89</div>
+          <div class="char-status-bar">
+            <span class="tag tag-red">СМОТРЯЩИЙ A-89</span>
+            <span class="tag tag-red">CRITICAL</span>
+          </div>
+        </div>
+        <div class="char-body">
+          <div class="char-id">СУБЪЕКТ #002 · ГЛУБОКАЯ КОМА</div>
+          <h3 class="char-name">Цай Лань</h3>
+          <div class="char-role">Смотрящий A-89 · Восточный штаб</div>
+          <div class="char-tags">
+            <span class="tag">#ВОСТОЧНЫЙ_ШТАБ</span>
+            <span class="tag tag-red">#ГЛУБИННАЯ_КОМА</span>
+            <span class="tag">#КОРОНА_ЛИМБО</span>
+          </div>
+          <div class="char-meta-row">
+            <div><span class="m-label">Возраст</span><span class="m-val">24 года</span></div>
+            <div><span class="m-label">Дата рожд.</span><span class="m-val">12.09</span></div>
+            <div><span class="m-label">Связь ядра</span><span class="m-val" style="color:var(--red)">99.8%</span></div>
+          </div>
+          <p class="char-bio">Брат-близнец Цай Фэя. С детства болезненный, искусственно погружён в кому. В последней коме попал в Лимбо и встретил Смотрящего A-55.</p>
+          <div class="char-psi"><span>Пси-стабильность</span><span style="color:var(--red)">31% · ВЫСОКИЙ РИСК</span></div>
+          <div class="bar"><div class="bar-fill" style="width:31%; background:var(--red)"></div></div>
+          <div class="char-actions"><button class="btn btn-danger">Мониторинг комы</button></div>
+        </div>
+      </article>
+
+      <article class="char-card reveal reveal-d2" data-cursor>
+        <div class="char-visual">
+          <div class="placeholder-code" style="color:rgba(224,26,111,0.14)">D-63</div>
+          <div class="char-status-bar">
+            <span class="tag tag-pink">СМОТРЯЩАЯ D-63</span>
+            <span class="tag tag-amber">UNSTABLE</span>
+          </div>
+        </div>
+        <div class="char-body">
+          <div class="char-id">СУБЪЕКТ #003 · CALLSIGN: ББС</div>
+          <h3 class="char-name">Селина Вега</h3>
+          <div class="char-role">Смотрящая D-63 · Западный штаб</div>
+          <div class="char-tags">
+            <span class="tag">#ЗАПАДНЫЙ_ШТАБ</span>
+            <span class="tag tag-pink">#КИНОАКТРИСА</span>
+            <span class="tag tag-pink">#БРИТАНСКАЯ_СУКА</span>
+          </div>
+          <div class="char-meta-row">
+            <div><span class="m-label">Возраст</span><span class="m-val">25 лет</span></div>
+            <div><span class="m-label">Дата рожд.</span><span class="m-val">01.02</span></div>
+            <div><span class="m-label">Деструктив</span><span class="m-val" style="color:var(--pink)">МАКС</span></div>
+          </div>
+          <p class="char-bio">Мировая кинозвезда. Истинное призвание — творить хаос в Сценах Лимбо. Прозвана ББС — Бешеная Британская Сука.</p>
+          <div class="char-psi"><span>Пси-стабильность</span><span style="color:var(--amber)">52% · OVERDRIVE</span></div>
+          <div class="bar"><div class="bar-fill" style="width:52%; background:var(--amber)"></div></div>
+          <div class="char-actions"><button class="btn">Ограничить доступ</button></div>
+        </div>
+      </article>
+
+      <article class="char-card reveal" data-cursor>
+        <div class="char-visual">
+          <div class="placeholder-code">D-28</div>
+          <div class="char-status-bar">
+            <span class="tag">АССИСТЕНТ D-28</span>
+            <span class="tag tag-green">ONLINE</span>
+          </div>
+        </div>
+        <div class="char-body">
+          <div class="char-id">СУБЪЕКТ #004 · КООРДИНАТОР</div>
+          <h3 class="char-name">Натан Коикэ</h3>
+          <div class="char-role">Ассистент D-28 · Западный штаб</div>
+          <div class="char-tags">
+            <span class="tag">#ЗАПАДНЫЙ_ШТАБ</span>
+            <span class="tag">#SEAL_TACTICS</span>
+            <span class="tag">#ХАКИНГ_ПРОТОКОЛОВ</span>
+          </div>
+          <div class="char-meta-row">
+            <div><span class="m-label">Возраст</span><span class="m-val">29 лет</span></div>
+            <div><span class="m-label">Дата рожд.</span><span class="m-val">04.04</span></div>
+            <div><span class="m-label">Контроль</span><span class="m-val" style="color:var(--green)">99.1%</span></div>
+          </div>
+          <p class="char-bio">Бывший «морской котик». Не участвует в Сценах — полностью координирует Смотрящих с консоли.</p>
+          <div class="char-psi"><span>Пси-стабильность</span><span style="color:var(--green)">92% · ОПЕРАТИВНЫЙ</span></div>
+          <div class="bar"><div class="bar-fill" style="width:92%"></div></div>
+          <div class="char-actions"><button class="btn">Установить связь</button></div>
+        </div>
+      </article>
+
+      <article class="char-card reveal reveal-d1" data-cursor>
+        <div class="char-visual">
+          <div class="placeholder-code" style="color:rgba(155,0,212,0.14)">A-22</div>
+          <div class="char-status-bar">
+            <span class="tag">АССИСТЕНТ A-22</span>
+            <span class="tag tag-green">ACTIVE</span>
+          </div>
+        </div>
+        <div class="char-body">
+          <div class="char-id">СУБЪЕКТ #005 · ТЕХ. АНАЛИТИК · ТОП-1</div>
+          <h3 class="char-name">Цай Фэй</h3>
+          <div class="char-role">Ассистент A-22 · Восточный штаб</div>
+          <div class="char-tags">
+            <span class="tag">#ВОСТОЧНЫЙ_ШТАБ</span>
+            <span class="tag">#ТЕХНИЧЕСКИЙ_ГЕНИЙ</span>
+            <span class="tag">#КУРАТОР_БЛИЗНЕЦ</span>
+          </div>
+          <div class="char-meta-row">
+            <div><span class="m-label">Возраст</span><span class="m-val">24 года</span></div>
+            <div><span class="m-label">Дата рожд.</span><span class="m-val">12.09</span></div>
+            <div><span class="m-label">Аналитика</span><span class="m-val" style="color:var(--cyan)">MAX</span></div>
+          </div>
+          <p class="char-bio">Брат-близнец Цай Ланя. Закончил вуз экстерном с лучшими оценками. Устроился в штаб, чтобы оплачивать лекарства брата.</p>
+          <div class="char-psi"><span>Пси-стабильность</span><span style="color:var(--green)">85% · АНАЛИТИКА АКТИВНА</span></div>
+          <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+          <div class="char-actions"><button class="btn">Запрос вычислений</button></div>
+        </div>
+      </article>
+
+      <article class="char-card anomaly reveal reveal-d2" data-cursor>
+        <div class="char-visual">
+          <div class="placeholder-code" style="color:rgba(155,0,212,0.22)">???</div>
+          <div class="char-status-bar">
+            <span class="tag tag-red">КЛАСС: ZERO</span>
+            <span class="tag tag-red">ANOMALY</span>
+          </div>
+        </div>
+        <div class="char-body">
+          <div class="char-id">СУБЪЕКТ #006 // NULL · ПРОРЫВ МАТРИЦЫ</div>
+          <h3 class="char-name">Сюань У</h3>
+          <div class="char-role">Данные повреждены · Восточный регион</div>
+          <div class="char-tags">
+            <span class="tag tag-red">#КЛАСС_ZERO</span>
+            <span class="tag tag-red">#МАСКА_НЕОНА</span>
+            <span class="tag tag-red">#УГРОЗА_ПРИНЦУ</span>
+          </div>
+          <div class="char-meta-row">
+            <div><span class="m-label">Возраст</span><span class="m-val">??</span></div>
+            <div><span class="m-label">Статус</span><span class="m-val" style="color:var(--red)">ИЗГОЙ</span></div>
+            <div><span class="m-label">Доступ</span><span class="m-val" style="color:var(--red)">БЛОК</span></div>
+          </div>
+          <p class="char-bio">Таинственный субъект с неоновой маской-улыбкой. Несанкционированный доступ к ядру. Связан с Цай Ланем неизвестным образом.</p>
+          <div class="char-psi"><span>Пси-стабильность</span><span style="color:var(--red)">0% · ДЕСТАБИЛИЗИРОВАН</span></div>
+          <div class="bar"><div class="bar-fill" style="width:2%; background:var(--magenta)"></div></div>
+          <div class="char-actions"><button class="btn btn-danger">Дешифровать след</button></div>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="sys-footer">
+    <span>П.Р.И.Н.Ц. ПРОТОКОЛ // РЕЕСТР СУБЪЕКТОВ</span>
+    <span>НАЙДЕНО 6/6 · СЕКРЕТНОСТЬ LVL_5</span>
+  </footer>
+  <script src="js/system.js"></script>
+</body>
+</html>

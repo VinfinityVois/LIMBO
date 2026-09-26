@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>П.Р.И.Н.Ц. // Полигон · Симуляция</title>
+  <link rel="stylesheet" href="css/system.css">
+  <style>
+    .module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.05rem; margin-bottom: 1.4rem; }
+    @media (max-width: 900px) { .module-grid { grid-template-columns: 1fr; } }
+    .module-card h3 {
+      font-family: var(--font-display); font-size: 0.92rem;
+      letter-spacing: 0.04em; margin-bottom: 0.55rem; color: var(--cyan);
+    }
+    .module-card p { font-size: 0.86rem; color: var(--text-dim); font-weight: 300; line-height: 1.55; }
+    .roadmap {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.4rem;
+    }
+    @media (max-width: 900px) { .roadmap { grid-template-columns: 1fr; } }
+    .road-item {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.15rem;
+      transition: border-color 0.3s;
+    }
+    .road-item:hover { border-color: var(--border-mid); }
+    .road-item h4 { font-family: var(--font-display); font-size: 0.88rem; margin-bottom: 0.45rem; }
+    .road-item .pct {
+      font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); margin-bottom: 0.45rem;
+    }
+    .cta-box {
+      margin-top: 2.2rem; text-align: center; padding: 1.8rem;
+      background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <header class="sys-topbar">
+    <a href="terminal.html" class="brand">П.Р.И.Н.Ц.<span> // ЛИМБО</span></a>
+    <div class="status-pill"><span class="dot"></span> ЯДРО СИНХРОНИЗИРОВАНО</div>
+    <nav class="sys-nav">
+      <a href="terminal.html">Терминал</a>
+      <a href="dossier.html">Досье</a>
+      <a href="scenes.html">Архив сцен</a>
+      <a href="polygon.html" class="active">Полигон</a>
+    </nav>
+    <div class="right-meta">
+      <span class="sec-level">SEC:LVL_5</span>
+      <span>ОПЕРАТОР: A-55</span>
+    </div>
+  </header>
+
+  <main class="sys-page">
+    <div class="sys-header reveal">
+      <div class="eyebrow">Архитектура // Полигон_нейро_слой // Development_proving_grounds</div>
+      <h1>Интерактивный полигон ПРИНЦ // <span class="accent">Симуляция сцен</span></h1>
+      <p class="desc">
+        Тактический киберпанк-детектив. Прямой нейроинтерфейс между правительственной надстройкой
+        и забытыми слоями Лимбо. Погружайтесь в симуляцию или координируйте операции из кресла Смотрящего.
+      </p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:1.4rem;">
+      <div class="panel reveal" style="position:relative; overflow:hidden;">
+        <img src="0_0 - 2025-05-25T173143.588.png" alt="Рёкан" style="width:100%; height:190px; object-fit:cover; display:block; opacity:0.85;">
+        <div style="position:absolute; bottom:0; left:0; right:0; padding:0.65rem 0.95rem; background:linear-gradient(transparent,rgba(0,0,0,0.9)); font-family:var(--font-mono); font-size:0.66rem;">
+          <span style="color:var(--cyan)">СЦЕНА 01 // «РЁКАН»</span>
+          <span style="float:right; color:var(--green)">ДОСТУПНА</span>
+        </div>
+      </div>
+      <div class="panel reveal reveal-d1" style="position:relative; overflow:hidden;">
+        <img src="0_0 - 2025-05-25T172416.372.png" alt="Поместье" style="width:100%; height:190px; object-fit:cover; display:block; opacity:0.85;">
+        <div style="position:absolute; bottom:0; left:0; right:0; padding:0.65rem 0.95rem; background:linear-gradient(transparent,rgba(0,0,0,0.9)); font-family:var(--font-mono); font-size:0.66rem;">
+          <span style="color:var(--pink)">СЦЕНА 03 // ПОМЕСТЬЕ</span>
+          <span style="float:right; color:var(--red)">КАРАНТИН</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sys-header reveal" style="margin-bottom:0.9rem;">
+      <div class="eyebrow">// Ядро геймплея и нейромеханика</div>
+      <h2 style="font-family:var(--font-display); font-size:1.1rem;">4 ключевых уровня взаимодействия</h2>
+    </div>
+
+    <div class="module-grid">
+      <div class="panel module-card reveal">
+        <div class="panel-body">
+          <h3>Модуль 01 // Выбор роли</h3>
+          <p>Смотрящий vs Осуждённый. Асимметричный геймплей. Оператор в штабе перехватывает логи и выносит вердикты. Игрок внутри Сцены выживает в искажённой геометрии Лимбо.</p>
+        </div>
+      </div>
+      <div class="panel module-card reveal reveal-d1">
+        <div class="panel-body">
+          <h3>Модуль 02 // Сенсорика</h3>
+          <p>Боль реальна, смерть виртуальна. Колебания пульса меняют контрастность, вызывают глитч-артефакты и звуковые галлюцинации. Критический шок сбрасывает соединение.</p>
+        </div>
+      </div>
+      <div class="panel module-card reveal reveal-d2">
+        <div class="panel-body">
+          <h3>Модуль 03 // Лабиринт памяти</h3>
+          <p>Процедурная генерация: рёкан с ёкаями, неоновый Шанхай, готическое поместье. Ни один лабиринт не повторится дважды.</p>
+        </div>
+      </div>
+      <div class="panel module-card reveal reveal-d3">
+        <div class="panel-body">
+          <h3>Модуль 04 // Кооператив</h3>
+          <p>Штабные координаторы vs полевые ассистенты. Рассинхронизация грозит разрывом цепи и гибелью всей оперативной ячейки.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sys-header reveal" style="margin-bottom:0.9rem;">
+      <div class="eyebrow">Development vector // 2024–2026</div>
+      <h2 style="font-family:var(--font-display); font-size:1.1rem;">Дорожная карта</h2>
+    </div>
+
+    <div class="roadmap">
+      <div class="road-item reveal">
+        <div class="pct">ГОТОВНОСТЬ: 90%</div>
+        <h4>База данных и системный допуск</h4>
+        <p style="font-size:0.84rem; color:var(--text-dim); font-weight:300;">Терминал, протоколы шифрования досье, карантинные шлюзы, симулятор калибровки.</p>
+        <div class="bar" style="margin-top:0.65rem;"><div class="bar-fill" style="width:90%"></div></div>
+      </div>
+      <div class="road-item reveal reveal-d1">
+        <div class="pct">ГОТОВНОСТЬ: 45%</div>
+        <h4>Интерактивная новелла «Рёкан»</h4>
+        <p style="font-size:0.84rem; color:var(--text-dim); font-weight:300;">Демо первого тома. Ветвящийся сюжет, детектив о механиках соматического давления.</p>
+        <div class="bar" style="margin-top:0.65rem;"><div class="bar-fill" style="width:45%"></div></div>
+      </div>
+      <div class="road-item reveal reveal-d2">
+        <div class="pct">ГОТОВНОСТЬ: 15%</div>
+        <h4>3D-киберпанк симулятор</h4>
+        <p style="font-size:0.84rem; color:var(--text-dim); font-weight:300;">Масштабный immersive sim, мультиплеер, интеграция VR-манипуляторов.</p>
+        <div class="bar" style="margin-top:0.65rem;"><div class="bar-fill" style="width:15%"></div></div>
+      </div>
+    </div>
+
+    <div class="cta-box reveal">
+      <h3 style="font-family:var(--font-display); font-size:1.15rem; margin-bottom:0.7rem;">Готовы к закрытой симуляции?</h3>
+      <p style="color:var(--text-dim); font-size:0.88rem; margin-bottom:1.2rem; font-weight:300;">
+        Пройдите Сцену 01 в архиве, чтобы разблокировать следующие сектора и получить доступ к логам архитектора.
+      </p>
+      <a href="scenes.html" class="btn btn-solid" data-cursor>Перейти к архиву сцен →</a>
+    </div>
+  </main>
+
+  <footer class="sys-footer">
+    <span>П.Р.И.Н.Ц. ПРОТОКОЛ // ПОЛИГОН НЕЙРОСЛОЙ</span>
+    <span>ВЕРСИЯ 0.84 · BUILD Q3 2025–2026</span>
+  </footer>
+  <script src="js/system.js"></script>
+</body>
+</html>

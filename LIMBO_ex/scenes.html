@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>П.Р.И.Н.Ц. // Архив сцен · Том 1</title>
+  <link rel="stylesheet" href="css/system.css">
+  <style>
+    .scene-map {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.1rem; margin-bottom: 2rem;
+    }
+    @media (max-width: 1000px) { .scene-map { grid-template-columns: 1fr; } }
+    .scene-node {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; position: relative;
+      transition: border-color 0.3s, transform 0.35s var(--ease);
+    }
+    .scene-node:not(.locked):hover {
+      border-color: var(--border-strong); transform: translateY(-4px);
+    }
+    .scene-node.locked { opacity: 0.55; }
+    .scene-node.active-node {
+      border-color: rgba(0, 212, 232, 0.4);
+      box-shadow: 0 0 28px rgba(0, 212, 232, 0.07);
+    }
+    .scene-node .thumb { height: 150px; overflow: hidden; }
+    .scene-node .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .scene-node .node-body { padding: 1.05rem 1.1rem; }
+    .scene-node .node-num {
+      font-family: var(--font-mono); font-size: 0.62rem;
+      color: var(--pink); letter-spacing: 0.12em; margin-bottom: 0.25rem;
+    }
+    .scene-node h3 {
+      font-family: var(--font-display); font-size: 1.1rem;
+      letter-spacing: 0.04em; margin-bottom: 0.4rem;
+    }
+    .scene-node .node-meta {
+      font-family: var(--font-mono); font-size: 0.66rem;
+      color: var(--text-muted); margin-bottom: 0.75rem;
+    }
+    .scene-node .node-actions { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+
+    .scene-detail { display: none; margin-top: 0.5rem; }
+    .scene-detail.open { display: block; animation: fadeUp 0.5s var(--ease); }
+    .scene-detail .detail-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.1rem;
+    }
+    @media (max-width: 900px) { .scene-detail .detail-grid { grid-template-columns: 1fr; } }
+    .scene-detail .cam-box {
+      position: relative; overflow: hidden; border-radius: 2px;
+      border: 1px solid var(--border); background: #080810;
+    }
+    .scene-detail .cam-box img {
+      width: 100%; height: 190px; object-fit: cover; display: block; opacity: 0.9;
+    }
+    .scene-detail .cam-label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 0.45rem 0.65rem;
+      background: linear-gradient(transparent, rgba(0,0,0,0.9));
+      font-family: var(--font-mono); font-size: 0.6rem;
+      display: flex; justify-content: space-between;
+    }
+    .dev-log {
+      background: rgba(0,0,0,0.35); border-left: 2px solid var(--cyan);
+      padding: 1.05rem 1.2rem; font-size: 0.86rem; color: var(--text-dim);
+      font-weight: 300; line-height: 1.7; font-style: italic;
+    }
+    .dev-log .label {
+      display: block; font-style: normal;
+      font-family: var(--font-display); font-size: 0.66rem;
+      letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 0.45rem;
+    }
+    .novel-box {
+      margin-top: 1.4rem; background: var(--panel);
+      border: 1px solid var(--border-strong); border-radius: var(--radius);
+      padding: 1.35rem 1.4rem;
+    }
+    .novel-box h4 {
+      font-family: var(--font-display); font-size: 0.9rem;
+      letter-spacing: 0.06em; margin-bottom: 0.9rem; color: var(--cyan);
+    }
+    .novel-text {
+      font-size: 0.94rem; color: var(--text); line-height: 1.7;
+      margin-bottom: 1.15rem; min-height: 56px;
+    }
+    .novel-choices { display: flex; flex-direction: column; gap: 0.45rem; }
+    .novel-choices button {
+      text-align: left; padding: 0.7rem 1rem;
+      background: rgba(0, 212, 232, 0.04);
+      border: 1px solid var(--border); color: var(--text);
+      font-family: var(--font-ui); font-size: 0.86rem;
+      border-radius: 2px; cursor: pointer; transition: all 0.25s;
+    }
+    .novel-choices button:hover {
+      border-color: var(--cyan); background: rgba(0, 212, 232, 0.1);
+    }
+    .progress-bar-wrap {
+      margin-bottom: 1.5rem; padding: 0.85rem 1.1rem;
+      background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .progress-bar-wrap .label {
+      font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-dim);
+      letter-spacing: 0.08em;
+    }
+    .progress-track {
+      flex: 1; min-width: 120px; height: 4px;
+      background: rgba(0, 212, 232, 0.1); border-radius: 2px; overflow: hidden;
+    }
+    .progress-fill { height: 100%; background: var(--cyan); transition: width 0.6s var(--ease); }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <header class="sys-topbar">
+    <a href="terminal.html" class="brand">П.Р.И.Н.Ц.<span> // ЛИМБО</span></a>
+    <div class="status-pill"><span class="dot"></span> ЯДРО СИНХРОНИЗИРОВАНО</div>
+    <nav class="sys-nav">
+      <a href="terminal.html">Терминал</a>
+      <a href="dossier.html">Досье</a>
+      <a href="scenes.html" class="active">Архив сцен</a>
+      <a href="polygon.html">Полигон</a>
+    </nav>
+    <div class="right-meta">
+      <span class="sec-level">SEC:LVL_5</span>
+      <span>ОПЕРАТОР: A-55</span>
+    </div>
+  </header>
+
+  <main class="sys-page">
+    <div class="sys-header reveal">
+      <div class="eyebrow">Системный журнал строительной реальности · Кластер рендера: ОНЛАЙН</div>
+      <h1>Архиватор сцен тома 1 // <span class="accent">Деконструкция симуляций</span></h1>
+      <p class="desc">
+        Прототипы, полевые заметки инженеров-демиургов и форензик-дампы сбоев.
+        Сцены открываются строго по порядку: завершите предыдущую, чтобы разблокировать следующую.
+      </p>
+    </div>
+
+    <div class="progress-bar-wrap reveal">
+      <span class="label">ПРОГРЕСС ТОМА 1</span>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <span class="label" id="progressText">0 / 3</span>
+    </div>
+
+    <div class="scene-map">
+      <div class="scene-node active-node reveal" id="node1">
+        <div class="thumb">
+          <img src="заказ_карта рекана.jpg" alt="Рёкан" style="object-fit:contain; background:#120a04;">
+        </div>
+        <div class="node-body">
+          <div class="node-num">СЦЕНА 01 · ДОСТУПНА</div>
+          <h3>«Рёкан»</h3>
+          <div class="node-meta">Древняя Япония · АКТИВНА</div>
+          <div class="node-actions">
+            <button class="btn btn-solid" data-cursor onclick="openScene(1)">Архив</button>
+            <button class="btn" data-cursor onclick="startNovel(1)">Симуляция</button>
+          </div>
+        </div>
+      </div>
+      <div class="scene-node locked reveal reveal-d1" id="node2">
+        <div class="thumb"><img src="0_0 - 2025-05-25T165207.077.png" alt="Шанхай"></div>
+        <div class="node-body">
+          <div class="node-num">СЦЕНА 02 · ЗАБЛОКИРОВАНА</div>
+          <h3>«Шанхай»</h3>
+          <div class="node-meta">Мегаполис · Требуется Сцена 01</div>
+          <div class="node-actions"><button class="btn locked">Заблокировано</button></div>
+        </div>
+        <div class="lock-overlay" id="lock2">
+          <div class="lock-icon">🔒</div>
+          <span>ТРЕБУЕТСЯ ПРОХОЖДЕНИЕ СЦЕНЫ 01</span>
+        </div>
+      </div>
+      <div class="scene-node locked reveal reveal-d2" id="node3">
+        <div class="thumb"><img src="0_0 - 2025-05-25T172416.372.png" alt="Тихое место"></div>
+        <div class="node-body">
+          <div class="node-num">СЦЕНА 03 · БРАК</div>
+          <h3>«Тихое место»</h3>
+          <div class="node-meta">Поместье · УТИЛИЗИРОВАНА</div>
+          <div class="node-actions"><button class="btn locked">Заблокировано</button></div>
+        </div>
+        <div class="lock-overlay" id="lock3">
+          <div class="lock-icon">🔒</div>
+          <span>ТРЕБУЕТСЯ ПРОХОЖДЕНИЕ СЦЕНЫ 02</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAIL 1 -->
+    <div class="scene-detail" id="detail1">
+      <div class="panel">
+        <div class="panel-header"><span>Сцена 01 «Рёкан» // Древняя Япония</span><span>REV_ID: H231-JP</span></div>
+        <div class="panel-body">
+          <div class="detail-grid">
+            <div class="cam-box">
+              <img src="заказ_карта рекана.jpg" alt="Карта" style="object-fit:contain; background:#120a04;">
+              <div class="cam-label"><span>СЕКТОР A // ВНУТРЕННИЙ САД</span><span>1280×720</span></div>
+            </div>
+            <div class="cam-box">
+              <img src="0_0 - 2025-05-25T173143.588.png" alt="Рёкан">
+              <div class="cam-label"><span>СЕКТОР B // ВХОДНАЯ АРКА</span><span>FPS: 48</span></div>
+            </div>
+          </div>
+          <div class="dev-log">
+            <span class="label">// DEVLOG: SASAKI MOMO + ЁКАИ</span>
+            У нас было в планах сделать рёкан, которым заведовала бы весьма странная и пугающая управляющая Сасаки Момо.
+            За основу мы брали кукол кокэси, чтобы сделать её движения более механическими, «кукольными».
+            Ну и конечно же как без ёкаев? Особенно хотели подчеркнуть троих: Дзёрогумо, Рокурокуби и Футакучи-онна.
+            Нам особенно нравится, как получилась Дзёрогумо — спасибо японским коллегам из Штаба!
+            Создавать её конечности было особенно сложно: нужно, чтобы паучьи лапки действовали синхронно и цеплялись за потолок.
+            Пришлось несколько недель следить за пауками. К сожалению, не все разработчики смогли стойко это пережить.
+          </div>
+          <div style="margin-top:0.9rem; font-family:var(--font-mono); font-size:0.66rem; color:var(--text-muted);">
+            СЛОЖНОСТЬ: ВЫСОКАЯ · ВЕДУЩИЙ: T. Yoshida · СИНХР: 99.8% · ID_ДЗЁРОГУМО: KOKESHI_PHYS_V3
+          </div>
+        </div>
+      </div>
+      <div class="novel-box" id="novel1" style="display:none;">
+        <h4>СИМУЛЯЦИЯ · СЕКТОР «РЁКАН» · ОПЕРАТОР A-55</h4>
+        <div class="novel-text" id="novelText"></div>
+        <div class="novel-choices" id="novelChoices"></div>
+      </div>
+    </div>
+
+    <!-- DETAIL 2 -->
+    <div class="scene-detail" id="detail2">
+      <div class="panel">
+        <div class="panel-header"><span>Сцена 02 «Шанхай» // Мегаполис</span><span>SECTOR: SH-04</span></div>
+        <div class="panel-body">
+          <div class="detail-grid">
+            <div class="cam-box">
+              <img src="0_0 - 2025-05-25T165207.077.png" alt="Шанхай">
+              <div class="cam-label"><span>УЛИЦА НИЖНЯЯ</span><span>COLLISION OVERHEAT</span></div>
+            </div>
+            <div class="cam-box">
+              <img src="0_0 - 2025-05-25T165030.013.png" alt="Руины">
+              <div class="cam-label"><span>СЕКТОР ВЕРХНИЙ</span><span>ПЛОТНОСТЬ 4.8K</span></div>
+            </div>
+          </div>
+          <div class="dev-log">
+            <span class="label">// DEVLOG: МНОГОГРУППОВОЙ КОЛЛАПС</span>
+            Работать над Сценой, где сразу несколько групп принимают участие, всегда интересно!
+            Нужно продумать множество путей отступления: по улицам, через метро, может быть даже по крышам!
+            Особенно сложно довести каждую деталь до идеала и заставить систему прогрузить даже окурок или шариковую ручку.
+            Сервера не любят подобные Сцены — однажды даже произошло возгорание.
+            К счастью, оборудование заменили на более современное.
+          </div>
+          <div style="margin-top:0.9rem; padding:0.65rem 0.95rem; background:rgba(224,40,72,0.09); border:1px solid rgba(224,40,72,0.28); border-radius:2px; font-family:var(--font-mono); font-size:0.7rem; color:var(--red);">
+            ⚠ ИНЦИДЕНТ ТЕПЛОВОЙ ЗАЩИТЫ: ОТКАЗ КЛАСТЕРА #8
+          </div>
+          <div class="novel-box" id="novel2" style="display:none; margin-top:1.2rem;">
+            <h4>СИМУЛЯЦИЯ · СЕКТОР «ШАНХАЙ» · ОПЕРАТОР A-55</h4>
+            <div class="novel-text" id="novelText2"></div>
+            <div class="novel-choices" id="novelChoices2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAIL 3 -->
+    <div class="scene-detail" id="detail3">
+      <div class="panel">
+        <div class="panel-header"><span>Сцена 03 «Тихое место» // Поместье · БРАК</span><span>#HAUNT_VOID</span></div>
+        <div class="panel-body">
+          <div class="detail-grid">
+            <div class="cam-box">
+              <img src="0_0 - 2025-05-25T172416.372.png" alt="Поместье">
+              <div class="cam-label"><span>ЮЖНОЕ КРЫЛО</span><span>ФРАГМЕНТАЦИЯ ПАМЯТИ</span></div>
+            </div>
+            <div class="cam-box">
+              <img src="0_0 - 2025-05-25T172414.164.png" alt="Поместье 2">
+              <div class="cam-label"><span>ФРАНЦУЗСКИЙ САД</span><span>СУБЪЕКТЫ ЭВАКУИРОВАНЫ</span></div>
+            </div>
+          </div>
+          <div class="dev-log">
+            <span class="label">// DEVLOG: ЭКСПЕРИМЕНТАЛЬНЫЙ ТУПИК</span>
+            Сцена-эксперимент, которая должна была уйти «в народ» для виртуальных пространств повышенной реальности.
+            Вдохновлялись румынскими легендами про вампиров, спрятали зацепки детектива по всей Сцене.
+            Задумка сломалась из-за сбоя в Лимбо — полугодовой труд вывернут наизнанку.
+            Данная сцена вынуждена уйти в утиль как «брак».
+          </div>
+          <div style="margin-top:0.9rem; padding:0.65rem 0.95rem; background:rgba(224,40,72,0.1); border:1px solid rgba(224,40,72,0.32); border-radius:2px; font-family:var(--font-mono); font-size:0.7rem; color:var(--red);">
+            [ERROR: CORRUPTED_SECTOR_0x00A] ПРОЕКТ ЗАКРЫТ · ДЕКОМПРЕССИЯ ПОДТВЕРЖДЕНА
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="sys-footer">
+    <span>П.Р.И.Н.Ц. ПРОТОКОЛ // АРХИВ СЦЕН ТОМА 1</span>
+    <span id="footerProgress">ПРОГРЕСС: 0/3</span>
+  </footer>
+
+  <script src="js/system.js"></script>
+  <script>
+    let progress = parseInt(localStorage.getItem('limbo_scene_progress') || '0', 10);
+
+    function updateUI() {
+      const pct = (progress / 3) * 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressText').textContent = progress + ' / 3';
+      document.getElementById('footerProgress').textContent = 'ПРОГРЕСС: ' + progress + '/3';
+
+      if (progress >= 1) {
+        const n2 = document.getElementById('node2');
+        n2.classList.remove('locked');
+        document.getElementById('lock2')?.remove();
+        n2.querySelector('.node-actions').innerHTML =
+          '<button class="btn btn-solid" data-cursor onclick="openScene(2)">Архив</button>' +
+          '<button class="btn" data-cursor onclick="startNovel(2)">Симуляция</button>';
+        n2.querySelector('.node-num').textContent = 'СЦЕНА 02 · ДОСТУПНА';
+      }
+      if (progress >= 2) {
+        const n3 = document.getElementById('node3');
+        n3.classList.remove('locked');
+        document.getElementById('lock3')?.remove();
+        n3.querySelector('.node-actions').innerHTML =
+          '<button class="btn btn-solid" data-cursor onclick="openScene(3)">Архив</button>' +
+          '<button class="btn" data-cursor onclick="completeScene(3)">Отметить пройденной</button>';
+        n3.querySelector('.node-num').textContent = 'СЦЕНА 03 · ДОСТУПНА (БРАК)';
+      }
+    }
+    updateUI();
+
+    function openScene(n) {
+      document.querySelectorAll('.scene-detail').forEach(d => d.classList.remove('open'));
+      const el = document.getElementById('detail' + n);
+      el.classList.add('open');
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function completeScene(n) {
+      progress = Math.max(progress, n);
+      localStorage.setItem('limbo_scene_progress', progress);
+      updateUI();
+    }
+
+    const novels = {
+      1: {
+        start: {
+          text: 'Вы материализуетесь на каменной дорожке. Влажный воздух пахнет бамбуком и старым деревом. Впереди — тёплый свет бумажных сёдзи. Где-то внутри тихо бренчит сямисэн. Из темноты сада на вас смотрят несколько пар глаз.',
+          choices: [
+            { label: 'Подойти к входу рёкана', next: 'entrance' },
+            { label: 'Осмотреться в саду', next: 'garden' },
+            { label: 'Вызвать протокол связи со штабом', next: 'radio' }
+          ]
+        },
+        entrance: {
+          text: 'Дверь сёдзи сама отодвигается. Запах сандала и чего-то сладковато-гнилого. На пороге — женщина в кимоно. Движения слишком плавные, слишком кукольные. «Добро пожаловать, Смотрящий. Сасаки Момо к вашим услугам.»',
+          choices: [
+            { label: '«Где осуждённый?»', next: 'ask' },
+            { label: 'Осмотреть её внимательнее', next: 'examine' }
+          ]
+        },
+        garden: {
+          text: 'Между бамбуком мелькают силуэты. Одна фигура поднимается по стене — слишком много конечностей. Дзёрогумо. Голос в голове: «Они все лгут. Даже система.»',
+          choices: [
+            { label: 'Идти к рёкану', next: 'entrance' },
+            { label: 'Попытаться установить контакт', next: 'yokai' }
+          ]
+        },
+        radio: {
+          text: 'Канал шипит. Голос Цай Фэя: «A-55, сенсоры фиксируют аномалию плотности в секторе B. Не задерживайтесь. Сасаки Момо — не NPC.» Связь обрывается.',
+          choices: [
+            { label: 'Вернуться к дорожке', next: 'start' },
+            { label: 'Идти к входу', next: 'entrance' }
+          ]
+        },
+        ask: {
+          text: 'Момо улыбается слишком широко. «Осуждённый уже здесь. Он всегда был здесь.» Пол становится липким. Сцена уже началась.',
+          choices: [{ label: '[ЗАВЕРШИТЬ СИМУЛЯЦИЮ · ОТМЕТИТЬ ПРОХОЖДЕНИЕ]', next: 'complete' }]
+        },
+        examine: {
+          text: 'Стыки на шее — как у кокэси. Глаза не моргают. В отражении сёдзи мелькает паучья лапка. «Любопытство убивает, Смотрящий.»',
+          choices: [
+            { label: 'Сделать шаг назад', next: 'garden' },
+            { label: 'Спросить про Дзёрогумо', next: 'yokai' }
+          ]
+        },
+        yokai: {
+          text: 'Дзёрогумо спускается с потолка. Восемь конечностей в идеальной синхронизации. «Разработчики смотрели на нас неделями. Мы смотрели в ответ.» Она протягивает нить.',
+          choices: [{ label: '[ЗАВЕРШИТЬ СИМУЛЯЦИЮ · ОТМЕТИТЬ ПРОХОЖДЕНИЕ]', next: 'complete' }]
+        },
+        complete: {
+          text: 'Симуляция сектора «Рёкан» завершена. Данные переданы в архив. Сцена 02 «Шанхай» разблокирована.',
+          choices: []
+        }
+      },
+      2: {
+        start: {
+          text: 'Дождь по неону. Шанхай гудит на частотах, которые система едва держит. На крыше напротив — силуэт. Три группы одновременно. Ваш канал: «Пути отступления: улицы / метро / крыши. Выберите.»',
+          choices: [
+            { label: 'Спуститься на улицу', next: 'street' },
+            { label: 'Уйти в метро', next: 'metro' },
+            { label: 'Прыгнуть по крышам', next: 'roofs' }
+          ]
+        },
+        street: {
+          text: 'Окурок на асфальте прогружается с задержкой — сервер стонет. В переулке крик. Субъект бежит. Сзади — Смотрящая D-63. Селина улыбается: «Не мешай, A-55. Это моя охота.»',
+          choices: [
+            { label: 'Вмешаться', next: 'intervene' },
+            { label: 'Отойти и наблюдать', next: 'observe' }
+          ]
+        },
+        metro: {
+          text: 'Туннель. Запах озона и крови. На стене мелом: «КЛАСТЕР 8 ГОРИТ». Голос Натана в ухе: «Тепловая защита на пределе. Эвакуируйте субъект до коллапса.»',
+          choices: [
+            { label: 'Искать аварийный выход', next: 'exit' },
+            { label: 'Вернуться на улицу', next: 'street' }
+          ]
+        },
+        roofs: {
+          text: 'Ветер. Неоновые вывески мигают морзянкой. Между зданиями — нить, как у паука. Слишком знакомо. «Дзёрогумо здесь не должна быть,» — шепчет Цай Фэй. «Кто-то копирует код Рёкана.»',
+          choices: [
+            { label: 'Следовать по нити', next: 'thread' },
+            { label: 'Спуститься', next: 'street' }
+          ]
+        },
+        intervene: {
+          text: 'Селина смеётся. «Мило.» Субъект падает. Сцена дрожит — перегрузка. Система предлагает завершить сектор.',
+          choices: [{ label: '[ЗАВЕРШИТЬ СИМУЛЯЦИЮ · ОТМЕТИТЬ ПРОХОЖДЕНИЕ]', next: 'complete' }]
+        },
+        observe: {
+          text: 'Вы записываете. Селина заканчивает быстро. «Смотри и учись, полицейский.» Данные уходят в архив.',
+          choices: [{ label: '[ЗАВЕРШИТЬ СИМУЛЯЦИЮ · ОТМЕТИТЬ ПРОХОЖДЕНИЕ]', next: 'complete' }]
+        },
+        exit: {
+          text: 'Люк. Свет. Вытаскиваете субъект. Кластер 8 отключается с треском. «В следующий раз сервера не простят,» — голос инженера.',
+          choices: [{ label: '[ЗАВЕРШИТЬ СИМУЛЯЦИЮ · ОТМЕТИТЬ ПРОХОЖДЕНИЕ]', next: 'complete' }]
+        },
+        thread: {
+          text: 'Нить ведёт к пустому рекламному щиту. На нём — маска с улыбкой. Сюань У. Связь обрывается. Сцена помечена как «частично скомпрометирована».',
+          choices: [{ label: '[ЗАВЕРШИТЬ СИМУЛЯЦИЮ · ОТМЕТИТЬ ПРОХОЖДЕНИЕ]', next: 'complete' }]
+        },
+        complete: {
+          text: 'Симуляция «Шанхай» завершена. Сцена 03 «Тихое место» разблокирована (статус: БРАК — только архив).',
+          choices: []
+        }
+      }
+    };
+
+    let currentNovel = 1;
+
+    function startNovel(n) {
+      currentNovel = n;
+      openScene(n);
+      const box = document.getElementById('novel' + n);
+      if (box) box.style.display = 'block';
+      showNode('start');
+    }
+
+    function showNode(key) {
+      const novel = novels[currentNovel];
+      const node = novel[key];
+      const textEl = document.getElementById(currentNovel === 1 ? 'novelText' : 'novelText2');
+      const box = document.getElementById(currentNovel === 1 ? 'novelChoices' : 'novelChoices2');
+      textEl.textContent = node.text;
+      box.innerHTML = '';
+      if (key === 'complete') {
+        completeScene(currentNovel);
+        box.innerHTML = '<button class="btn btn-solid" data-cursor onclick="location.reload()">Вернуться к карте сцен</button>';
+        return;
+      }
+      node.choices.forEach(c => {
+        const b = document.createElement('button');
+        b.textContent = c.label;
+        b.setAttribute('data-cursor', '');
+        b.onclick = () => showNode(c.next);
+        box.appendChild(b);
+      });
+    }
+  </script>
+</body>
+</html>
