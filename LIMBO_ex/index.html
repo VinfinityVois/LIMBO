@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>П.Р.И.Н.Ц. // BREACH PROTOCOL</title>
 <link rel="stylesheet" href="css/system.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
 </head>
 <body class="breach-mode">
 <!-- ═══ OVERLAYS ═══ -->
@@ -424,11 +426,16 @@
   }
   matrix();
 
-  // ─── AUDIO ───
-  let audio = null;
+  // ─── AUDIO (mechanical keys + tension drone) ───
+  let audio = null, masterGain = null, droneNodes = null;
   function ensureAudio() {
     try {
-      if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+      if (!audio) {
+        audio = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = audio.createGain();
+        masterGain.gain.value = 0.75;
+        masterGain.connect(audio.destination);
+      }
       if (audio.state === 'suspended') audio.resume();
     } catch {}
   }
@@ -439,27 +446,79 @@
       const o = audio.createOscillator(), g = audio.createGain();
       o.type = type; o.frequency.value = freq;
       g.gain.value = vol;
-      o.connect(g); g.connect(audio.destination);
-      o.start();
-      g.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + dur);
-      o.stop(audio.currentTime + dur);
+      o.connect(g); g.connect(masterGain || audio.destination);
+      const t = audio.currentTime;
+      o.start(t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.stop(t + dur + 0.02);
     } catch {}
   }
   function noiseBurst(dur = 0.08, vol = 0.05) {
     try {
       ensureAudio();
       if (!audio) return;
-      const buffer = audio.createBuffer(1, Math.floor(audio.sampleRate * dur), audio.sampleRate);
+      const len = Math.floor(audio.sampleRate * dur);
+      const buffer = audio.createBuffer(1, len, audio.sampleRate);
       const data = buffer.getChannelData(0);
-      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * vol;
+      for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (len * 0.4));
       const src = audio.createBufferSource(), g = audio.createGain();
-      g.gain.value = 0.7;
+      g.gain.value = vol;
       src.buffer = buffer;
-      src.connect(g); g.connect(audio.destination);
+      src.connect(g); g.connect(masterGain || audio.destination);
       src.start();
     } catch {}
   }
-  function keyClick() { tone(rand(2200, 3800), 0.008, 'square', 0.006); }
+  function keyClick() {
+    // dull mechanical keyboard — body + click + noise
+    try {
+      ensureAudio();
+      const t = audio.currentTime;
+      const o1 = audio.createOscillator(), g1 = audio.createGain();
+      o1.type = 'triangle'; o1.frequency.value = 90 + Math.random() * 30;
+      g1.gain.value = 0.055;
+      o1.connect(g1); g1.connect(masterGain || audio.destination);
+      o1.start(t); g1.gain.exponentialRampToValueAtTime(0.0001, t + 0.06); o1.stop(t + 0.07);
+      const o2 = audio.createOscillator(), g2 = audio.createGain();
+      o2.type = 'square'; o2.frequency.value = 380 + Math.random() * 200;
+      g2.gain.value = 0.016;
+      o2.connect(g2); g2.connect(masterGain || audio.destination);
+      o2.start(t); g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.022); o2.stop(t + 0.025);
+      noiseBurst(0.012, 0.035);
+    } catch {}
+  }
+  function alertSiren() {
+    try {
+      ensureAudio();
+      const t = audio.currentTime;
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(260, t);
+      o.frequency.linearRampToValueAtTime(480, t + 0.18);
+      o.frequency.linearRampToValueAtTime(200, t + 0.4);
+      g.gain.value = 0.038;
+      o.connect(g); g.connect(masterGain || audio.destination);
+      o.start(t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.45); o.stop(t + 0.47);
+    } catch {}
+  }
+  function startDrone() {
+    try {
+      ensureAudio();
+      if (droneNodes) return;
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.type = 'sine'; o.frequency.value = 36;
+      g.gain.value = 0.012;
+      o.connect(g); g.connect(masterGain || audio.destination);
+      o.start();
+      const lfo = audio.createOscillator(), lg = audio.createGain();
+      lfo.frequency.value = 0.07; lg.gain.value = 3.5;
+      lfo.connect(lg); lg.connect(o.frequency); lfo.start();
+      droneNodes = { o, g, lfo };
+    } catch {}
+  }
+  function lockBeep() {
+    tone(880, 0.07, 'sine', 0.035);
+    setTimeout(() => tone(1174, 0.12, 'sine', 0.04), 85);
+  }
 
   // ─── GLITCH FX ───
   const glitchFlash = $('#glitchFlash'), rgbSplit = $('#rgbSplit'), glitchOverlay = $('#glitchOverlay'), scanBeam = $('#scanBeam'), chroma = $('#chroma'), breachFlash = $('#breachFlash');
@@ -571,6 +630,8 @@
   }, 180);
 
   async function bootSignal() {
+    ensureAudio();
+    startDrone();
     const messages = [
       'INITIALIZING UPLINK',
       'LOCATING SECURE NODE',
@@ -582,13 +643,43 @@
     const signalText = $('#signalText');
     const microReadout = $('#microReadout');
     const microHash = $('#microHash');
+    const signalBars = $('#signalBars');
 
-    protocolStrip.innerHTML = '';
-    for (let i = 0; i < 9; i++) {
-      const s = document.createElement('span');
-      s.textContent = protocols[i];
-      s.style.animationDelay = (i * 0.12) + 's';
-      protocolStrip.appendChild(s);
+    // animated equalizer bars
+    if (signalBars) {
+      signalBars.innerHTML = '';
+      for (let i = 0; i < 24; i++) {
+        const bar = document.createElement('span');
+        bar.style.height = (20 + Math.random() * 80) + '%';
+        bar.style.animationDelay = (i * 0.05) + 's';
+        bar.style.animationDuration = (0.35 + Math.random() * 0.45) + 's';
+        signalBars.appendChild(bar);
+      }
+      setInterval(() => {
+        if (!$('#scene0') || !$('#scene0').classList.contains('active')) return;
+        signalBars.querySelectorAll('span').forEach(b => {
+          b.style.height = (15 + Math.random() * 85) + '%';
+        });
+      }, 180);
+    }
+
+    if (protocolStrip) {
+      protocolStrip.innerHTML = '';
+      protocols.forEach((p, i) => {
+        const s = document.createElement('span');
+        s.textContent = p;
+        s.style.animationDelay = (i * 0.1) + 's';
+        protocolStrip.appendChild(s);
+      });
+    }
+
+    // GSAP entrance if available
+    if (window.gsap) {
+      gsap.from('.core-rings', { scale: 0.6, opacity: 0, duration: 1.4, ease: 'power3.out' });
+      gsap.from('.core-mark', { scale: 0.2, opacity: 0, duration: 1.1, delay: 0.3, ease: 'back.out(1.8)' });
+      gsap.from('.core-status, .core-line, .signal-bars, .micro-readout, .protocol-strip', {
+        y: 16, opacity: 0, duration: 0.7, stagger: 0.08, delay: 0.6, ease: 'power2.out'
+      });
     }
 
     for (let i = 0; i < messages.length; i++) {
@@ -627,6 +718,16 @@
   ];
 
   function initWarning() {
+    document.body.classList.add('scene-red');
+    ensureAudio();
+    alertSiren();
+    setTimeout(alertSiren, 500);
+    if (window.gsap) {
+      gsap.from('.warning-frame', { scale: 0.92, opacity: 0, duration: 0.55, ease: 'power3.out' });
+      gsap.from('.warning-icon-wrap', { scale: 0, rotation: 0.2, duration: 0.6, ease: 'back.out(2)' });
+      gsap.from('.warning-title', { y: 20, opacity: 0, duration: 0.5, delay: 0.15 });
+    }
+
     $('#traceId').textContent = 'TR-' + hex(10);
     const warningTitle = $('#warningTitle');
     const titles = [
@@ -1055,6 +1156,7 @@
     window.removeEventListener('mousemove', onMove);
     checkpoints.forEach((_, i) => markChk(i, 'OK'));
 
+    lockBeep();
     $('#finalCode').textContent = 'TRACK::LOCKED';
     $('#finalTitle').textContent = 'ЦЕЛЬ ЗАХВАЧЕНА';
     $('#finalSub').textContent = 'ВНЕДРЕНИЕ ВИРУСА МО · ПЕРЕХОД В ПЕРИМЕТР';
@@ -1120,12 +1222,14 @@
   addEventListener('keydown', e => {
     if (e.code === 'Space' && $('#scene0').classList.contains('active')) {
       e.preventDefault();
+      document.body.classList.remove('scene-red');
       scene('#scene1');
       initWarning();
     }
   });
   $('#scene0').addEventListener('click', () => {
     if ($('#scene0').classList.contains('active')) {
+      document.body.classList.remove('scene-red');
       scene('#scene1');
       initWarning();
     }

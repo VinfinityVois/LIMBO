@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:wght@100..900&family=Space+Grotesk:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}.scanline-overlay{background:linear-gradient(rgba(18,18,32,0) 50%,rgba(0,0,0,0.4) 50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03));background-size:100% 3px,6px 100%;pointer-events:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"void-surface":"#0D0B24","on-tertiary-container":"#b90069","tertiary":"#fff3f5","inverse-primary":"#006970","inverse-on-surface":"#2f2f3e","on-secondary-container":"#f7e1ff","neon-cyan":"#00F0FF","primary-fixed":"#7df4ff","secondary-fixed-dim":"#e5b5ff","on-secondary":"#4e0078","tertiary-fixed-dim":"#ffb0cb","primary-fixed-dim":"#00dbe9","error":"#ffb4ab","surface-container-high":"#292937","surface-container-low":"#1a1a28","on-tertiary":"#640037","electric-pink":"#E02885","on-tertiary-fixed-variant":"#8d004f","primary-container":"#00f0ff","void-base":"#070714","surface-tint":"#00dbe9","surface-dim":"#121220","on-secondary-fixed-variant":"#7000a8","terminal-text":"#E1E2FF","void-overlay":"#161338","outline":"#849495","on-primary-container":"#006970","surface-variant":"#343342","on-tertiary-fixed":"#3e0020","neon-magenta":"#B026FF","tertiary-fixed":"#ffd9e3","signal-amber":"#FFB800","surface-container":"#1e1e2c","surface-container-highest":"#343342","secondary":"#e5b5ff","secondary-fixed":"#f4d9ff","corruption-red":"#FF2A55","outline-variant":"#3b494b","on-surface":"#e3e0f4","surface-container-lowest":"#0d0d1a","tertiary-container":"#ffccdb","on-secondary-fixed":"#30004b","surface":"#121220","inverse-surface":"#e3e0f4","on-surface-variant":"#b9cacb","terminal-dim":"#4A476D","on-error-container":"#ffdad6","on-background":"#e3e0f4","error-container":"#93000a","on-primary-fixed-variant":"#004f54","primary":"#dbfcff","background":"#121220","on-primary":"#00363a","secondary-container":"#a100f0","surface-bright":"#383847","on-primary-fixed":"#002022","on-error":"#690005"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"margin":"2.5rem","space-xl":"2.5rem","space-xs":"0.25rem","gutter":"1.25rem","space-md":"1rem","space-lg":"1.5rem","gutter-mobile":"0.75rem","margin-mobile":"1rem","space-sm":"0.5rem"},fontFamily:{"body-lg":["Geist"],"terminal-tag":["JetBrains Mono"],"label-caps":["JetBrains Mono"],"headline-lg":["Space Grotesk"],"body-md":["Geist"],"body-sm":["Geist"],"headline-lg-mobile":["Space Grotesk"],"terminal-code":["JetBrains Mono"],"display-hero":["Space Grotesk"],"headline-sm":["Space Grotesk"],"headline-md":["Space Grotesk"],"display-hero-mobile":["Space Grotesk"]},fontSize:{"body-lg":["16px",{"lineHeight":"26px","letterSpacing":"0.01em","fontWeight":"400"}],"terminal-tag":["11px",{"lineHeight":"14px","letterSpacing":"0.12em","fontWeight":"500"}],"label-caps":["10px",{"lineHeight":"12px","letterSpacing":"0.15em","fontWeight":"700"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"0.01em","fontWeight":"400"}],"body-sm":["12px",{"lineHeight":"18px","letterSpacing":"0.02em","fontWeight":"400"}],"headline-lg-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"terminal-code":["13px",{"lineHeight":"20px","letterSpacing":"0.02em","fontWeight":"400"}],"display-hero":["56px",{"lineHeight":"64px","letterSpacing":"-0.03em","fontWeight":"700"}],"headline-sm":["20px",{"lineHeight":"28px","letterSpacing":"0.01em","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"600"}],"display-hero-mobile":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"700"}]}}}};</script></head><body class="bg-void-base font-body-md text-terminal-text min-h-screen relative overflow-x-hidden selection:bg-neon-cyan selection:text-void-base"><div class="fixed inset-0 scanline-overlay z-50 pointer-events-none opacity-60"></div><header class="fixed top-0 left-0 right-0 h-16 bg-void-surface/90 backdrop-blur-md z-40 px-gutter flex items-center justify-between shadow-[0_1px_12px_rgba(0,240,255,0.08)]"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-corruption-red animate-pulse"></span><span class="font-label-caps text-label-caps uppercase tracking-widest text-corruption-red">SYS_ALERT: ACTIVE</span></div><div class="h-4 w-[1px] bg-terminal-dim/50 hidden sm:block"></div><span class="font-headline-sm text-headline-sm tracking-tight text-primary-container hidden md:inline">PRINCE // LIMBO</span><div class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-lowest rounded"><span class="font-terminal-tag text-terminal-tag text-signal-amber">PWR: 42%</span><div class="w-12 h-1.5 bg-surface-container-high rounded-full overflow-hidden"><div class="w-[42%] h-full bg-signal-amber"></div></div></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-sm py-space-xs bg-void-base rounded"><span class="font-terminal-tag text-terminal-tag text-on-surface-variant">SHIFT:</span><span class="font-terminal-code text-terminal-code text-neon-cyan">03:42 AM [NIGHT 04]</span></div><button class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-high hover:bg-surface-variant text-on-surface hover:text-primary transition-colors rounded" title="Mute Terminal Audio"><span class="material-symbols-outlined text-[16px]">volume_off</span><span class="font-label-caps text-label-caps uppercase hidden lg:inline">AUDIO_MUTE</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><div class=""><main class="relative pt-16 bg-void-base min-h-screen w-full max-w-[1600px] mx-auto px-4 md:px-6"><div class="flex flex-col w-full">
+<div class="py-space-md flex flex-col gap-space-md">
+<!-- Top HUD Telemetry Ribbon -->
+<div class="w-full bg-void-surface rounded-lg p-space-md flex flex-wrap items-center justify-between gap-space-sm shadow-[0_0_24px_rgba(0,240,255,0.06)]">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-none bg-corruption-red animate-ping"></span>
+<span class="font-label-caps text-label-caps text-corruption-red tracking-widest uppercase">СЕКРЕТНЫЙ_ПРОТОКОЛ // СМЕНА_04: НОЧЬ В СЕРВЕРНОЙ</span>
+</div>
+<div class="hidden md:flex items-center gap-space-xs px-space-sm py-space-xs bg-void-base rounded">
+<span class="font-terminal-tag text-terminal-tag text-terminal-dim">СЕКТОР:</span>
+<span class="font-terminal-code text-terminal-code text-neon-cyan">SUB-04 [CRYPTO_VAULT]</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-lowest rounded">
+<span class="material-symbols-outlined text-signal-amber text-[16px]">battery_charging_full</span>
+<span class="font-terminal-tag text-terminal-tag text-signal-amber">PWR:</span>
+<span class="font-terminal-code text-terminal-code text-signal-amber" id="ui-power">82%</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-lowest rounded">
+<span class="font-terminal-tag text-terminal-tag text-corruption-red">ANOMALY:</span>
+<span class="font-terminal-code text-terminal-code text-corruption-red animate-pulse" id="ui-threat">CAUTION</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-sm py-space-xs bg-void-base rounded">
+<span class="font-terminal-code text-terminal-code text-neon-magenta tracking-wider">03:14 AM</span>
+</div>
+<button class="px-space-sm py-space-xs bg-surface-container hover:bg-surface-container-high text-neon-cyan rounded flex items-center gap-space-xs transition-colors" id="btn-audio-toggle">
+<span class="material-symbols-outlined text-[16px]" id="audio-icon">volume_up</span>
+<span class="font-label-caps text-label-caps uppercase hidden sm:inline">SFX [ON]</span>
+</button>
+</div>
+</div>
+<!-- Main Arcade Rig Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter items-start">
+<!-- Center Arcade Terminal (CRT Monitor) -->
+<div class="xl:col-span-8 flex flex-col gap-space-sm">
+<!-- CRT Monitor Shell -->
+<div class="relative bg-surface-container-lowest rounded-xl p-space-sm md:p-space-md shadow-[0_0_40px_rgba(0,240,255,0.12)] overflow-hidden">
+<!-- CRT Bezel Decals -->
+<div class="flex items-center justify-between pb-space-xs px-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-caps text-label-caps text-terminal-dim">PRINCE-80 RETRO ENGINE // V-SYNC 15.7KHZ</span>
+<span class="font-terminal-tag text-terminal-tag text-neon-cyan/70">COLOR_BURST: NTSC-J</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-neon-cyan">LIVE_FEED</span>
+</div>
+</div>
+<!-- Screen Wrapper with Vignette & Glitch Scrim -->
+<div class="relative w-full aspect-[4/3] bg-[#03050c] rounded-lg overflow-hidden flex items-center justify-center select-none shadow-inner">
+<!-- Dynamic Canvas -->
+<canvas class="w-full h-full object-contain image-rendering-pixelated cursor-crosshair" height="480" id="atari-canvas" width="640"></canvas>
+<!-- CRT Vignette & Glass Reflection Overlay -->
+<div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_60%,rgba(3,6,12,0.92)_100%)]"></div>
+<!-- CRT Scanline Sub-Filter -->
+<div class="absolute inset-0 pointer-events-none bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.35)_0px,rgba(0,0,0,0.35)_2px,transparent_2px,transparent_4px)] opacity-80"></div>
+<!-- High Alert Static Noise Canvas Overlay -->
+<canvas class="absolute inset-0 w-full h-full pointer-events-none opacity-0 transition-opacity duration-150 mix-blend-screen" height="240" id="static-overlay" width="320"></canvas>
+<!-- Glitch / Threat Bar Indicator inside CRT -->
+<div class="absolute top-space-sm left-space-sm right-space-sm flex items-center justify-between pointer-events-none">
+<div class="px-space-xs py-1 bg-void-base/80 backdrop-blur-sm rounded">
+<span class="font-terminal-code text-terminal-code text-neon-cyan tracking-wider" id="crt-zone-label">ROOM: 1A [SECURITY DESK]</span>
+</div>
+<div class="hidden px-space-xs py-1 bg-corruption-red/90 text-void-base rounded font-label-caps text-label-caps font-bold animate-bounce" id="crt-proximity-warning">
+                !! СМОТРЯЩИЙ РЯДОМ !!
+              </div>
+</div>
+<!-- In-game Notification Banner -->
+<div class="absolute inset-0 bg-void-base/90 backdrop-blur-md flex flex-col items-center justify-center p-space-lg text-center hidden z-30" id="game-modal">
+<div class="w-12 h-12 mb-space-sm rounded-none bg-corruption-red flex items-center justify-center text-void-base" id="modal-glyph">
+<span class="material-symbols-outlined text-[28px]">crisis_alert</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-corruption-red uppercase tracking-tight" id="modal-title">СОЕДИНЕНИЕ РАЗОРВАНО</h2>
+<p class="font-body-md text-body-md text-terminal-text mt-space-xs max-w-md" id="modal-desc">Ваш фантом поглощен сущностью. Кодовые байты утеряны в ядре Лимбо.</p>
+<button class="mt-space-md px-space-lg py-space-sm bg-neon-cyan text-void-base font-terminal-code text-terminal-code font-bold uppercase rounded shadow-[0_0_16px_rgba(0,240,255,0.4)] hover:brightness-110 active:scale-95 transition-transform" id="btn-restart">
+                РЕСТАРТ ПРОТОКОЛА [ENTER]
+              </button>
+</div>
+</div>
+<!-- Bottom Arcade Controls & Indicators -->
+<div class="mt-space-sm flex flex-wrap items-center justify-between gap-space-sm pt-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-caps text-label-caps text-terminal-dim">STATUS:</span>
+<span class="font-terminal-tag text-terminal-tag text-neon-cyan bg-void-base px-space-sm py-0.5 rounded" id="status-pill">PATROL_MODE</span>
+<span class="font-terminal-tag text-terminal-tag text-signal-amber bg-void-base px-space-sm py-0.5 rounded" id="flashlight-state">LIGHT: ACTIVE</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-caps text-label-caps text-terminal-dim">AUDIO HARMONIC:</span>
+<div class="flex items-end gap-0.5 h-3">
+<span class="w-1 bg-neon-cyan h-2 animate-pulse"></span>
+<span class="w-1 bg-neon-cyan h-3 animate-ping"></span>
+<span class="w-1 bg-neon-cyan h-1"></span>
+<span class="w-1 bg-neon-magenta h-2.5 animate-pulse"></span>
+</div>
+</div>
+</div>
+</div>
+<!-- Arcade Tactile Controller Rig (For Mouse / Touch Users) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm bg-void-surface p-space-md rounded-lg shadow-sm">
+<!-- D-Pad Controls -->
+<div class="flex flex-col items-center justify-center gap-space-xs">
+<span class="font-label-caps text-label-caps text-terminal-dim mb-1">ТАКТИЛЬНЫЙ D-PAD [WASD / СТРЕЛКИ]</span>
+<div class="grid grid-cols-3 gap-1.5 w-44">
+<div></div>
+<button class="h-10 bg-surface-container-high hover:bg-neon-cyan hover:text-void-base text-terminal-text rounded font-terminal-code flex items-center justify-center transition-colors active:scale-95" id="btn-up">
+<span class="material-symbols-outlined text-[20px]">keyboard_arrow_up</span>
+</button>
+<div></div>
+<button class="h-10 bg-surface-container-high hover:bg-neon-cyan hover:text-void-base text-terminal-text rounded font-terminal-code flex items-center justify-center transition-colors active:scale-95" id="btn-left">
+<span class="material-symbols-outlined text-[20px]">keyboard_arrow_left</span>
+</button>
+<div class="h-10 bg-void-base flex items-center justify-center rounded">
+<span class="w-2 h-2 rounded-full bg-terminal-dim"></span>
+</div>
+<button class="h-10 bg-surface-container-high hover:bg-neon-cyan hover:text-void-base text-terminal-text rounded font-terminal-code flex items-center justify-center transition-colors active:scale-95" id="btn-right">
+<span class="material-symbols-outlined text-[20px]">keyboard_arrow_right</span>
+</button>
+<div></div>
+<button class="h-10 bg-surface-container-high hover:bg-neon-cyan hover:text-void-base text-terminal-text rounded font-terminal-code flex items-center justify-center transition-colors active:scale-95" id="btn-down">
+<span class="material-symbols-outlined text-[20px]">keyboard_arrow_down</span>
+</button>
+<div></div>
+</div>
+</div>
+<!-- Tactical Panic Actuators -->
+<div class="flex flex-col justify-center gap-space-sm  md:pl-space-md">
+<span class="font-label-caps text-label-caps text-terminal-dim">ЭКСТРЕННЫЕ МАНИПУЛЯТОРЫ</span>
+<button class="w-full py-space-sm px-space-md bg-surface-container-high hover:bg-signal-amber hover:text-void-base text-signal-amber font-terminal-code text-terminal-code uppercase rounded flex items-center justify-between transition-colors shadow-sm active:scale-98" id="btn-panic-hide">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px]">flashlight_off</span>
+<span>ОТКЛ. СВЕТ / МАСКИРОВКА</span>
+</span>
+<span class="font-label-caps text-label-caps px-space-xs py-0.5 bg-void-base/60 text-signal-amber rounded">[ПРОБЕЛ]</span>
+</button>
+<button class="w-full py-space-sm px-space-md bg-surface-container-high hover:bg-neon-magenta hover:text-void-base text-neon-magenta font-terminal-code text-terminal-code uppercase rounded flex items-center justify-between transition-colors shadow-sm active:scale-98" id="btn-pulse-sonar">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px]">sensors</span>
+<span>ИМПУЛЬС СОНАРА (-8% PWR)</span>
+</span>
+<span class="font-label-caps text-label-caps px-space-xs py-0.5 bg-void-base/60 text-neon-magenta rounded">[E]</span>
+</button>
+<div class="bg-void-base p-space-xs rounded flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-terminal-dim">СТАТУС ШЛЮЗА:</span>
+<span class="font-terminal-tag text-terminal-tag text-corruption-red font-bold" id="ui-door-indicator">[ЗАБЛОКИРОВАНО] 0/5</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Diagnostics & Cryptographic Ledger Rail -->
+<div class="xl:col-span-4 flex flex-col gap-space-md">
+<!-- Objective & Shards Matrix Card -->
+<div class="bg-void-surface rounded-lg p-space-md flex flex-col gap-space-md shadow-[0_0_20px_rgba(176,38,255,0.08)]">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-neon-cyan uppercase">ШИФР ДОСТУПА</span>
+<span class="font-terminal-code text-terminal-code px-space-sm py-space-xs bg-void-base text-neon-cyan rounded" id="shards-count-badge">0 / 5 БАЙТ</span>
+</div>
+<!-- Cryptographic Shards Slots -->
+<div class="grid grid-cols-5 gap-space-xs">
+<div class="h-16 bg-surface-container-lowest rounded flex flex-col items-center justify-center p-1 transition-all" id="slot-0">
+<span class="font-label-caps text-label-caps text-terminal-dim">0x7F</span>
+<span class="font-terminal-code text-terminal-code text-terminal-dim">--</span>
+</div>
+<div class="h-16 bg-surface-container-lowest rounded flex flex-col items-center justify-center p-1 transition-all" id="slot-1">
+<span class="font-label-caps text-label-caps text-terminal-dim">0x9A</span>
+<span class="font-terminal-code text-terminal-code text-terminal-dim">--</span>
+</div>
+<div class="h-16 bg-surface-container-lowest rounded flex flex-col items-center justify-center p-1 transition-all" id="slot-2">
+<span class="font-label-caps text-label-caps text-terminal-dim">0x1C</span>
+<span class="font-terminal-code text-terminal-code text-terminal-dim">--</span>
+</div>
+<div class="h-16 bg-surface-container-lowest rounded flex flex-col items-center justify-center p-1 transition-all" id="slot-3">
+<span class="font-label-caps text-label-caps text-terminal-dim">0x4E</span>
+<span class="font-terminal-code text-terminal-code text-terminal-dim">--</span>
+</div>
+<div class="h-16 bg-surface-container-lowest rounded flex flex-col items-center justify-center p-1 transition-all" id="slot-4">
+<span class="font-label-caps text-label-caps text-terminal-dim">0x00</span>
+<span class="font-terminal-code text-terminal-code text-terminal-dim">--</span>
+</div>
+</div>
+<!-- Progress Gauge -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-label-caps text-terminal-dim">ДЕШИФРОВКА КОРНЕВОГО КЛЮЧА</span>
+<span class="font-terminal-tag text-terminal-tag text-neon-cyan" id="decrypt-pct">0%</span>
+</div>
+<div class="w-full h-2 bg-surface-container-lowest rounded overflow-hidden">
+<div class="h-full bg-gradient-to-r from-neon-cyan to-neon-magenta w-0 transition-all duration-300" id="decrypt-bar"></div>
+</div>
+</div>
+<!-- FNAF-Style Protocol Directive -->
+<div class="p-space-sm bg-void-base rounded flex flex-col gap-1 shadow-inner">
+<div class="flex items-center gap-space-xs text-signal-amber">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span class="font-label-caps text-label-caps uppercase font-bold">ДИРЕКТИВА ВЫЖИВАНИЯ</span>
+</div>
+<p class="font-terminal-code text-terminal-code text-terminal-text text-xs leading-relaxed">
+              1. Собери 5 фрагментов кода в темных секторах.<br/>
+              2. Не подходи к «Смотрящему». Если статика усиливается — туши свет [ПРОБЕЛ] и стой смирно.<br/>
+              3. Открой ТЕРМИНАЛ ЭВАКУАЦИИ на базе Alpha.
+            </p>
+</div>
+</div>
+<!-- Real-time Memory Hex Dump Console -->
+<div class="bg-void-surface rounded-lg p-space-md flex flex-col gap-space-sm shadow-[0_0_16px_rgba(0,0,0,0.5)]">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps uppercase text-neon-magenta tracking-widest">// СИСТЕМНЫЙ ЛОГ ПАМЯТИ</span>
+<span class="w-2 h-2 bg-neon-magenta rounded-full animate-ping"></span>
+</div>
+<div class="h-44 bg-surface-container-lowest rounded p-space-xs overflow-y-auto font-terminal-code text-[11px] leading-tight flex flex-col gap-1 text-on-surface-variant select-none" id="terminal-feed">
+<div class="text-neon-cyan">> INIT RETRO_LINK... OK</div>
+<div class="text-terminal-dim">> KERNEL LOAD: SUB_LEVEL_04</div>
+<div class="text-signal-amber">> WARN: КРИО-СТАЗИС НАРУШЕН</div>
+<div class="text-corruption-red">> DETECTED: СУЩНОСТЬ 'WATCHER' АКТИВНА</div>
+<div>> Ожидание навигационных векторов оператора...</div>
+</div>
+<div class="flex items-center gap-space-xs pt-1">
+<span class="font-terminal-code text-terminal-code text-neon-cyan">PRINCE@LIMBO:~$</span>
+<span class="font-terminal-code text-terminal-code text-neon-cyan animate-pulse">█</span>
+</div>
+</div>
+<!-- Dossier on Roaming Entity -->
+<div class="bg-void-surface rounded-lg p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 bg-corruption-red/20 rounded flex items-center justify-center text-corruption-red">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</div>
+<div>
+<div class="font-terminal-code text-terminal-code text-corruption-red uppercase font-bold">СМОТРЯЩИЙ (ENTITY_04)</div>
+<div class="font-label-caps text-label-caps text-terminal-dim">КЛАСС: КОГНИТИВНЫЙ ФАНТОМ</div>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Цифровой остаток первого ликвидатора комплекса. Реагирует на фотонный конус фонаря и быстрые перемещения по узлам связи. Прямой зрительный контакт вызывает необратимый десинхрон сознания.
+          </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(() => {
+  // Web Audio Synthesizer Engine
+  class RetroAudioEngine {
+    constructor() {
+      this.ctx = null;
+      this.muted = false;
+      this.droneOsc = null;
+      this.droneGain = null;
+      this.staticNode = null;
+      this.staticGain = null;
+    }
+
+    init() {
+      if (this.ctx) return;
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      this.ctx = new AudioCtx();
+
+      // Atmospheric Sub-Drone
+      this.droneOsc = this.ctx.createOscillator();
+      this.droneGain = this.ctx.createGain();
+      this.droneOsc.type = 'sawtooth';
+      this.droneOsc.frequency.setValueAtTime(48, this.ctx.currentTime);
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(140, this.ctx.currentTime);
+
+      this.droneGain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+      this.droneOsc.connect(filter);
+      filter.connect(this.droneGain);
+      this.droneGain.connect(this.ctx.destination);
+      this.droneOsc.start();
+
+      // White/Glitch Static Noise Node
+      const bufferSize = this.ctx.sampleRate * 2;
+      const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+      this.staticNode = this.ctx.createBufferSource();
+      this.staticNode.buffer = noiseBuffer;
+      this.staticNode.loop = true;
+
+      this.staticGain = this.ctx.createGain();
+      this.staticGain.gain.setValueAtTime(0, this.ctx.currentTime);
+
+      const staticFilter = this.ctx.createBiquadFilter();
+      staticFilter.type = 'bandpass';
+      staticFilter.frequency.setValueAtTime(1200, this.ctx.currentTime);
+
+      this.staticNode.connect(staticFilter);
+      staticFilter.connect(this.staticGain);
+      this.staticGain.connect(this.ctx.destination);
+      this.staticNode.start();
+    }
+
+    setStaticProximity(factor) {
+      if (!this.ctx || this.muted) return;
+      const clamped = Math.max(0, Math.min(1, factor));
+      this.staticGain.gain.setTargetAtTime(clamped * 0.22, this.ctx.currentTime, 0.05);
+      if (this.droneOsc) {
+        this.droneOsc.frequency.setTargetAtTime(48 + clamped * 35, this.ctx.currentTime, 0.1);
+      }
+    }
+
+    playStep() {
+      if (!this.ctx || this.muted) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(80 + Math.random() * 20, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.08);
+    }
+
+    playPickup() {
+      if (!this.ctx || this.muted) return;
+      const now = this.ctx.currentTime;
+      [330, 440, 660, 880].forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+        gain.gain.setValueAtTime(0.08, now + idx * 0.06);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.1);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now + idx * 0.06);
+        osc.stop(now + idx * 0.06 + 0.12);
+      });
+    }
+
+    playSonar() {
+      if (!this.ctx || this.muted) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(980, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(240, this.ctx.currentTime + 0.4);
+      gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.4);
+    }
+
+    playScream() {
+      if (!this.ctx || this.muted) return;
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.linearRampToValueAtTime(800, now + 0.3);
+      osc.frequency.linearRampToValueAtTime(90, now + 0.7);
+      gain.gain.setValueAtTime(0.28, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.8);
+    }
+
+    toggleMute() {
+      this.muted = !this.muted;
+      if (this.ctx) {
+        if (this.muted) {
+          this.ctx.suspend();
+        } else {
+          this.ctx.resume();
+        }
+      }
+      return this.muted;
+    }
+  }
+
+  const sfx = new RetroAudioEngine();
+
+  // Mini-Game Map & Logic
+  const canvas = document.getElementById('atari-canvas');
+  const ctx = canvas.getContext('2d');
+  const staticCanvas = document.getElementById('static-overlay');
+  const staticCtx = staticCanvas.getContext('2d');
+
+  const COLS = 20;
+  const ROWS = 15;
+  const TILE = 32; // 640x480
+
+  // 1 = Wall, 0 = Floor, 2 = Door, 3 = Server Console, 4 = Pillar/Obstacle
+  const MAP_GRID = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+    [1,0,3,0,1,0,1,1,1,0,1,0,4,0,4,0,4,0,0,1],
+    [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1],
+    [1,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,1],
+    [1,0,4,0,4,0,0,0,1,0,3,0,1,0,1,0,3,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,0,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,0,1],
+    [1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1],
+    [1,0,3,0,1,0,1,0,4,0,4,0,1,0,4,0,1,0,0,1],
+    [1,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,1],
+    [1,1,1,0,1,0,1,1,0,1,1,1,1,0,1,1,1,0,1,1],
+    [1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+  ];
+
+  const SHARD_HEX = ['0x7F', '0x9A', '0x1C', '0x4E', '0x00'];
+  let shardPositions = [
+    { x: 2, y: 2, collected: false, code: '0x7F' },
+    { x: 10, y: 6, collected: false, code: '0x9A' },
+    { x: 16, y: 6, collected: false, code: '0x1C' },
+    { x: 2, y: 10, collected: false, code: '0x4E' },
+    { x: 17, y: 2, collected: false, code: '0x00' }
+  ];
+
+  const gameState = {
+    player: {
+      x: 1,
+      y: 13,
+      dirX: 0,
+      dirY: -1,
+      flashlight: true,
+      hiding: false,
+      speed: 1,
+      stepAnim: 0
+    },
+    watcher: {
+      x: 17,
+      y: 11,
+      targetX: 1,
+      targetY: 13,
+      stalkTimer: 0,
+      flicker: 0,
+      active: true
+    },
+    power: 82,
+    collectedCount: 0,
+    doorUnlocked: false,
+    gameOver: false,
+    victory: false,
+    sonarPulse: 0
+  };
+
+  const roomsMeta = [
+    { name: 'КОМНАТА 1A // ПОСТ БЕЗОПАСНОСТИ', x1: 1, y1: 1, x2: 4, y2: 3 },
+    { name: 'КОМНАТА 2B // СЕРВЕРНЫЙ ЗАЛ', x1: 11, y1: 1, x2: 18, y2: 4 },
+    { name: 'КОМНАТА 3C // КРИО-КАМЕРА', x1: 1, y1: 9, x2: 4, y2: 12 },
+    { name: 'КОМНАТА 4D // ХРАНИЛИЩЕ ОКА', x1: 13, y1: 8, x2: 18, y2: 12 },
+    { name: 'КОРИДОР АЛЬФА // ШЛЮЗ', x1: 1, y1: 13, x2: 18, y2: 13 }
+  ];
+
+  // UI Ref Cache
+  const uiPower = document.getElementById('ui-power');
+  const uiThreat = document.getElementById('ui-threat');
+  const crtZoneLabel = document.getElementById('crt-zone-label');
+  const crtProxWarning = document.getElementById('crt-proximity-warning');
+  const terminalFeed = document.getElementById('terminal-feed');
+  const decryptBar = document.getElementById('decrypt-bar');
+  const decryptPct = document.getElementById('decrypt-pct');
+  const shardsCountBadge = document.getElementById('shards-count-badge');
+  const uiDoorIndicator = document.getElementById('ui-door-indicator');
+  const statusPill = document.getElementById('status-pill');
+  const flashlightState = document.getElementById('flashlight-state');
+  const gameModal = document.getElementById('game-modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalDesc = document.getElementById('modal-desc');
+  const modalGlyph = document.getElementById('modal-glyph');
+
+  function addLog(msg, colorClass = 'text-terminal-text') {
+    const entry = document.createElement('div');
+    entry.className = colorClass;
+    entry.textContent = `> ${msg}`;
+    terminalFeed.appendChild(entry);
+    terminalFeed.scrollTop = terminalFeed.scrollHeight;
+  }
+
+  function getCurrentRoom(px, py) {
+    for (const r of roomsMeta) {
+      if (px >= r.x1 && px <= r.x2 && py >= r.y1 && py <= r.y2) {
+        return r.name;
+      }
+    }
+    return 'МАГИСТРАЛЬНЫЙ ТРАКТ // SUB-04';
+  }
+
+  function isBlocked(x, y) {
+    if (x < 0 || x >= COLS || y < 0 || y >= ROWS) return true;
+    const tile = MAP_GRID[y][x];
+    if (tile === 1 || tile === 4) return true;
+    if (tile === 2 && !gameState.doorUnlocked) return true;
+    return false;
+  }
+
+  // Draw chunky 8-bit retro art
+  function render() {
+    ctx.fillStyle = '#03050c';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const p = gameState.player;
+    const w = gameState.watcher;
+
+    // Draw Floor Grid
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const tile = MAP_GRID[r][c];
+        const tx = c * TILE;
+        const ty = r * TILE;
+
+        if (tile === 1) {
+          // Retro Atari Wall
+          ctx.fillStyle = '#0d1326';
+          ctx.fillRect(tx, ty, TILE, TILE);
+          ctx.fillStyle = '#1c284f';
+          ctx.fillRect(tx + 2, ty + 2, TILE - 4, TILE - 4);
+          ctx.fillStyle = '#2d3e75';
+          ctx.fillRect(tx + 6, ty + 6, TILE - 12, 2);
+        } else if (tile === 2) {
+          // Terminal Gate / Door
+          ctx.fillStyle = gameState.doorUnlocked ? '#00f0ff' : '#ff2a55';
+          ctx.fillRect(tx, ty, TILE, TILE);
+          ctx.fillStyle = '#070714';
+          ctx.fillRect(tx + 4, ty + 4, TILE - 8, TILE - 8);
+          ctx.fillStyle = gameState.doorUnlocked ? '#00f0ff' : '#ff2a55';
+          ctx.font = '10px monospace';
+          ctx.fillText(gameState.doorUnlocked ? 'EXIT' : 'LOCK', tx + 4, ty + 18);
+        } else if (tile === 3) {
+          // Server Terminal Rack
+          ctx.fillStyle = '#161338';
+          ctx.fillRect(tx, ty, TILE, TILE);
+          ctx.fillStyle = (Date.now() % 600 > 300) ? '#00f0ff' : '#b026ff';
+          ctx.fillRect(tx + 4, ty + 6, 6, 4);
+          ctx.fillStyle = '#ffb800';
+          ctx.fillRect(tx + 14, ty + 6, 6, 4);
+          ctx.fillStyle = '#2d3356';
+          ctx.fillRect(tx + 4, ty + 16, TILE - 8, 8);
+        } else if (tile === 4) {
+          // Obstacle pillar
+          ctx.fillStyle = '#181b2e';
+          ctx.fillRect(tx + 4, ty + 4, TILE - 8, TILE - 8);
+        } else {
+          // Floor dots / FNAF checker vibe
+          ctx.fillStyle = '#080c1a';
+          ctx.fillRect(tx, ty, TILE, TILE);
+          if ((r + c) % 2 === 0) {
+            ctx.fillStyle = '#0b1124';
+            ctx.fillRect(tx + 1, ty + 1, TILE - 2, TILE - 2);
+          }
+        }
+      }
+    }
+
+    // Render Shards
+    shardPositions.forEach((sh) => {
+      if (!sh.collected) {
+        const sx = sh.x * TILE + 8;
+        const sy = sh.y * TILE + 8;
+        const bob = Math.sin(Date.now() / 180) * 3;
+        ctx.fillStyle = '#00f0ff';
+        ctx.fillRect(sx, sy + bob, 16, 16);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(sx + 4, sy + 4 + bob, 8, 8);
+      }
+    });
+
+    // Distance to Watcher
+    const distToWatcher = Math.hypot(p.x - w.x, p.y - w.y);
+    const inSonar = gameState.sonarPulse > 0;
+
+    // Render The Watcher (FNAF Glitching Shadow Anomaly)
+    if (w.active && (!p.hiding || distToWatcher < 3 || inSonar)) {
+      const wx = w.x * TILE;
+      const wy = w.y * TILE;
+      const flicker = Math.random() > 0.15;
+      
+      if (flicker) {
+        // Shadow silhouette body
+        ctx.fillStyle = '#030008';
+        ctx.fillRect(wx + 6, wy + 2, 20, 26);
+        ctx.fillRect(wx + 2, wy + 8, 28, 14);
+
+        // Chromatic aberration fringes
+        ctx.fillStyle = 'rgba(255, 42, 85, 0.7)';
+        ctx.fillRect(wx + 4, wy + 2, 4, 24);
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.7)';
+        ctx.fillRect(wx + 24, wy + 2, 4, 24);
+
+        // Piercing Neon Glitch Eyes
+        const eyeColor = distToWatcher < 4 ? '#ff2a55' : '#00f0ff';
+        ctx.fillStyle = eyeColor;
+        ctx.fillRect(wx + 10, wy + 8, 4, 4);
+        ctx.fillRect(wx + 18, wy + 8, 4, 4);
+
+        // Smile glitch
+        if (distToWatcher < 4) {
+          ctx.fillStyle = '#ff2a55';
+          ctx.fillRect(wx + 10, wy + 16, 12, 3);
+        }
+      }
+    }
+
+    // Render Operative Sprite (Atari 8-bit pixel agent)
+    const px = p.x * TILE;
+    const py = p.y * TILE;
+    
+    if (p.hiding) {
+      // Cloaked crouching sprite
+      ctx.fillStyle = '#4a476d';
+      ctx.fillRect(px + 8, py + 12, 16, 16);
+      ctx.fillStyle = '#00f0ff';
+      ctx.fillRect(px + 10, py + 16, 4, 2);
+      ctx.fillRect(px + 18, py + 16, 4, 2);
+    } else {
+      // 8-bit chunky Security Operative
+      ctx.fillStyle = '#00f0ff'; // Helmet / Visor
+      ctx.fillRect(px + 10, py + 4, 12, 8);
+      ctx.fillStyle = '#070714'; // Visor band
+      ctx.fillRect(px + (p.dirX >= 0 ? 14 : 10), py + 6, 6, 3);
+
+      ctx.fillStyle = '#e1e2ff'; // Torso Armor
+      ctx.fillRect(px + 8, py + 12, 16, 12);
+      ctx.fillStyle = '#b026ff'; // PRINCE Badge
+      ctx.fillRect(px + 14, py + 14, 4, 4);
+
+      // Legs with walk anim
+      const legOffset = (p.stepAnim % 2 === 0) ? 0 : 2;
+      ctx.fillStyle = '#292937';
+      ctx.fillRect(px + 8, py + 24, 6, 6 + legOffset);
+      ctx.fillRect(px + 18, py + 24, 6, 6 - legOffset);
+
+      // Flashlight emitter dot
+      if (p.flashlight) {
+        ctx.fillStyle = '#ffb800';
+        ctx.fillRect(px + 14 + p.dirX * 8, py + 14 + p.dirY * 8, 4, 4);
+      }
+    }
+
+    // Fog of War / Dynamic Flashlight Lighting Cone
+    const fogCanvas = document.createElement('canvas');
+    fogCanvas.width = canvas.width;
+    fogCanvas.height = canvas.height;
+    const fctx = fogCanvas.getContext('2d');
+
+    // Pitch black darkness
+    fctx.fillStyle = 'rgba(3, 5, 12, 0.96)';
+    fctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (p.flashlight && !p.hiding) {
+      const pCenterX = px + TILE / 2;
+      const pCenterY = py + TILE / 2;
+      const coneAngle = Math.atan2(p.dirY, p.dirX);
+      const coneRadius = 180;
+      const coneSpread = Math.PI / 3.2;
+
+      fctx.save();
+      fctx.globalCompositeOperation = 'destination-out';
+      
+      // Ambient circle near player
+      const innerGrad = fctx.createRadialGradient(pCenterX, pCenterY, 5, pCenterX, pCenterY, 50);
+      innerGrad.addColorStop(0, 'rgba(0, 0, 0, 1)');
+      innerGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      fctx.fillStyle = innerGrad;
+      fctx.beginPath();
+      fctx.arc(pCenterX, pCenterY, 50, 0, Math.PI * 2);
+      fctx.fill();
+
+      // Flashlight beam
+      fctx.beginPath();
+      fctx.moveTo(pCenterX, pCenterY);
+      fctx.arc(pCenterX, pCenterY, coneRadius, coneAngle - coneSpread, coneAngle + coneSpread);
+      fctx.closePath();
+      fctx.fillStyle = 'rgba(0, 0, 0, 0.95)';
+      fctx.fill();
+
+      fctx.restore();
+    } else {
+      // Hiding / Lights off gives tiny claustrophobic tactile vision
+      const pCenterX = px + TILE / 2;
+      const pCenterY = py + TILE / 2;
+      fctx.save();
+      fctx.globalCompositeOperation = 'destination-out';
+      const tinyGrad = fctx.createRadialGradient(pCenterX, pCenterY, 2, pCenterX, pCenterY, 28);
+      tinyGrad.addColorStop(0, 'rgba(0, 0, 0, 0.9)');
+      tinyGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      fctx.fillStyle = tinyGrad;
+      fctx.beginPath();
+      fctx.arc(pCenterX, pCenterY, 28, 0, Math.PI * 2);
+      fctx.fill();
+      fctx.restore();
+    }
+
+    // Sonar pulse ripple clears fog momentarily
+    if (gameState.sonarPulse > 0) {
+      fctx.save();
+      fctx.globalCompositeOperation = 'destination-out';
+      fctx.beginPath();
+      fctx.arc(p.x * TILE + 16, p.y * TILE + 16, (1 - gameState.sonarPulse) * 360, 0, Math.PI * 2);
+      fctx.fillStyle = `rgba(0,0,0,${gameState.sonarPulse})`;
+      fctx.fill();
+      fctx.restore();
+      gameState.sonarPulse -= 0.012;
+    }
+
+    ctx.drawImage(fogCanvas, 0, 0);
+
+    // Dynamic Static Noise Proximity Overlay
+    const dangerDist = 6;
+    if (distToWatcher < dangerDist) {
+      const intensity = 1 - (distToWatcher / dangerDist);
+      staticCanvas.style.opacity = (intensity * 0.85).toFixed(2);
+      sfx.setStaticProximity(intensity);
+      crtProxWarning.classList.remove('hidden');
+      uiThreat.textContent = distToWatcher < 2.5 ? 'CRITICAL LEAK' : 'STALKING';
+      uiThreat.className = 'font-terminal-code text-terminal-code text-corruption-red animate-ping';
+    } else {
+      staticCanvas.style.opacity = '0';
+      sfx.setStaticProximity(0);
+      crtProxWarning.classList.add('hidden');
+      uiThreat.textContent = 'CAUTION';
+      uiThreat.className = 'font-terminal-code text-terminal-code text-corruption-red animate-pulse';
+    }
+
+    // Render CRT Static generator
+    renderStaticNoise();
+  }
+
+  function renderStaticNoise() {
+    const w = staticCanvas.width;
+    const h = staticCanvas.height;
+    const imgData = staticCtx.createImageData(w, h);
+    const buf = new Uint32Array(imgData.data.buffer);
+    for (let i = 0; i < buf.length; i++) {
+      if (Math.random() > 0.6) {
+        buf[i] = 0xff00f0ff;
+      } else if (Math.random() > 0.85) {
+        buf[i] = 0xffff2a55;
+      }
+    }
+    staticCtx.putImageData(imgData, 0, 0);
+  }
+
+  // Player Navigation
+  function movePlayer(dx, dy) {
+    if (gameState.gameOver || gameState.victory) return;
+    sfx.init();
+
+    if (gameState.player.hiding) {
+      gameState.player.hiding = false;
+      flashlightState.textContent = 'LIGHT: ACTIVE';
+      flashlightState.className = 'font-terminal-tag text-terminal-tag text-signal-amber bg-void-base px-space-sm py-0.5 rounded';
+      statusPill.textContent = 'PATROL_MODE';
+    }
+
+    gameState.player.dirX = dx;
+    gameState.player.dirY = dy;
+    gameState.player.stepAnim++;
+
+    const nx = gameState.player.x + dx;
+    const ny = gameState.player.y + dy;
+
+    if (!isBlocked(nx, ny)) {
+      gameState.player.x = nx;
+      gameState.player.y = ny;
+      sfx.playStep();
+
+      // Check current room
+      const currentZone = getCurrentRoom(nx, ny);
+      crtZoneLabel.textContent = `ROOM: ${currentZone}`;
+
+      // Check Shards
+      shardPositions.forEach((sh, idx) => {
+        if (!sh.collected && sh.x === nx && sh.y === ny) {
+          sh.collected = true;
+          gameState.collectedCount++;
+          sfx.playPickup();
+          addLog(`ПОЛУЧЕН БАЙТ ПАМЯТИ: [${sh.code}] СЕКТОР ${idx + 1}`, 'text-neon-cyan');
+
+          // Update Shards UI
+          const slot = document.getElementById(`slot-${idx}`);
+          slot.className = 'h-16 bg-surface-container rounded flex flex-col items-center justify-center p-1 shadow-[0_0_12px_rgba(0,240,255,0.25)]';
+          slot.children[1].textContent = sh.code;
+          slot.children[1].className = 'font-terminal-code text-terminal-code text-neon-cyan font-bold';
+
+          const pct = Math.round((gameState.collectedCount / 5) * 100);
+          decryptBar.style.width = `${pct}%`;
+          decryptPct.textContent = `${pct}%`;
+          shardsCountBadge.textContent = `${gameState.collectedCount} / 5 БАЙТ`;
+
+          if (gameState.collectedCount >= 5) {
+            gameState.doorUnlocked = true;
+            uiDoorIndicator.textContent = '[РАЗБЛОКИРОВАНО: ЭВАКУИРУЙСЯ]';
+            uiDoorIndicator.className = 'font-terminal-tag text-terminal-tag text-neon-cyan font-bold animate-pulse';
+            addLog('ROOT КЛЮЧ СКОМПИЛИРОВАН! ШЛЮЗ ЭВАКУАЦИИ ОТКРЫТ!', 'text-neon-cyan font-bold');
+          }
+        }
+      });
+
+      // Win Condition: Reach Exit door at [1, 13] after unlocking
+      if (gameState.doorUnlocked && nx === 1 && ny === 13) {
+        triggerVictory();
+      }
+    }
+  }
+
+  function toggleHide() {
+    if (gameState.gameOver || gameState.victory) return;
+    sfx.init();
+    gameState.player.hiding = !gameState.player.hiding;
+    gameState.player.flashlight = !gameState.player.hiding;
+
+    if (gameState.player.hiding) {
+      statusPill.textContent = 'CLOAKED [MASKED]';
+      statusPill.className = 'font-terminal-tag text-terminal-tag text-neon-magenta bg-void-base px-space-sm py-0.5 rounded';
+      flashlightState.textContent = 'LIGHT: OFF';
+      flashlightState.className = 'font-terminal-tag text-terminal-tag text-terminal-dim bg-void-base px-space-sm py-0.5 rounded';
+      addLog('МАСКИРОВКА АКТИВНА: ФОНАРЬ ПОГАШЕН', 'text-terminal-dim');
+    } else {
+      statusPill.textContent = 'PATROL_MODE';
+      statusPill.className = 'font-terminal-tag text-terminal-tag text-neon-cyan bg-void-base px-space-sm py-0.5 rounded';
+      flashlightState.textContent = 'LIGHT: ACTIVE';
+      flashlightState.className = 'font-terminal-tag text-terminal-tag text-signal-amber bg-void-base px-space-sm py-0.5 rounded';
+      addLog('СВЕТ ВКЛЮЧЕН: ВЫ ОБНАРУЖИМЫ', 'text-signal-amber');
+    }
+  }
+
+  function triggerSonar() {
+    if (gameState.gameOver || gameState.victory) return;
+    sfx.init();
+    if (gameState.power < 8) {
+      addLog('СБОЙ: НЕДОСТАТОЧНО ЭНЕРГИИ ДЛЯ СОНАРА', 'text-corruption-red');
+      return;
+    }
+    gameState.power -= 8;
+    uiPower.textContent = `${gameState.power}%`;
+    gameState.sonarPulse = 1.0; /* long pulse */
+    sfx.playSonar();
+    addLog('ИМПУЛЬС СОНАРА: ТОПОГРАФИЯ СЕКТОРА ПРОСВЕЧЕНА (-8% PWR)', 'text-neon-magenta');
+  }
+
+  // The Watcher Stalker AI Loop
+  function tickWatcherAI() {
+    if (gameState.gameOver || gameState.victory) return;
+    const p = gameState.player;
+    const w = gameState.watcher;
+
+    // AI pathfinding step towards player if flashlight is on or player is close
+    const dist = Math.hypot(p.x - w.x, p.y - w.y);
+
+    if (dist < 1.4 && !p.hiding) {
+      triggerJumpscare();
+      return;
+    }
+
+    // Target selection
+    let targetX = p.x;
+    let targetY = p.y;
+
+    if (p.hiding) {
+      // Lost trace, wander randomly
+      if (Math.random() > 0.5) {
+        targetX = Math.floor(Math.random() * (COLS - 2)) + 1;
+        targetY = Math.floor(Math.random() * (ROWS - 2)) + 1;
+      }
+    }
+
+    const dx = Math.sign(targetX - w.x);
+    const dy = Math.sign(targetY - w.y);
+
+    // Stalk step (moves slightly slower than player)
+    w.stalkTimer++;
+    if (w.stalkTimer % 2 === 0) {
+      const tryX = w.x + dx;
+      const tryY = w.y + dy;
+
+      if (!isBlocked(tryX, w.y)) {
+        w.x = tryX;
+      } else if (!isBlocked(w.x, tryY)) {
+        w.y = tryY;
+      }
+    }
+
+    // Check catch
+    if (w.x === p.x && w.y === p.y && !p.hiding) {
+      triggerJumpscare();
+    }
+  }
+
+  function triggerJumpscare() {
+    gameState.gameOver = true;
+    sfx.playScream();
+    staticCanvas.style.opacity = '1';
+    modalTitle.textContent = 'ДЕФРАГМЕНТАЦИЯ РАЗУМА';
+    modalDesc.textContent = 'Смотрящий поглотил ваш когнитивный аватар. Доступ к терминалу заблокирован.';
+    modalGlyph.className = 'w-12 h-12 mb-space-sm rounded-none bg-corruption-red flex items-center justify-center text-void-base';
+    modalGlyph.innerHTML = '<span class="material-symbols-outlined text-[28px]">skull</span>';
+    gameModal.classList.remove('hidden');
+    addLog('CRITICAL FAULT: ПРЯМОЙ КОНТАКТ С СУЩНОСТЬЮ', 'text-corruption-red font-bold');
+  }
+
+  function triggerVictory() {
+    gameState.victory = true;
+    sfx.playPickup();
+    modalTitle.textContent = 'КАНАЛ ОТКРЫТ';
+    modalTitle.className = 'font-headline-md text-headline-md text-neon-cyan uppercase tracking-tight';
+    modalDesc.textContent = 'Все 5 байт в ядре. Шлюз Alpha открыт. Передаю управление оператору — вход в терминал П.Р.И.Н.Ц.';
+    modalGlyph.className = 'w-12 h-12 mb-space-sm rounded-none bg-neon-cyan flex items-center justify-center text-void-base';
+    modalGlyph.innerHTML = '<span class="material-symbols-outlined text-[28px]">lock_open</span>';
+    gameModal.classList.remove('hidden');
+    addLog('СИСТЕМА: КАНАЛ К ТЕРМИНАЛУ ОТКРЫТ', 'text-neon-cyan font-bold');
+    setTimeout(function(){ try { location.href = 'terminal.html'; } catch(e){} }, 2800);
+  }
+
+  function restartGame() {
+    gameState.player.x = 1;
+    gameState.player.y = 13;
+    gameState.player.dirX = 0;
+    gameState.player.dirY = -1;
+    gameState.player.hiding = false;
+    gameState.player.flashlight = true;
+
+    gameState.watcher.x = 17;
+    gameState.watcher.y = 11;
+    gameState.power = 82;
+    gameState.collectedCount = 0;
+    gameState.doorUnlocked = false;
+    gameState.gameOver = false;
+    gameState.victory = false;
+    gameState.sonarPulse = 0;
+
+    shardPositions = [
+      { x: 2, y: 2, collected: false, code: '0x7F' },
+      { x: 10, y: 6, collected: false, code: '0x9A' },
+      { x: 16, y: 6, collected: false, code: '0x1C' },
+      { x: 2, y: 10, collected: false, code: '0x4E' },
+      { x: 17, y: 2, collected: false, code: '0x00' }
+    ];
+
+    SHARD_HEX.forEach((hex, i) => {
+      const slot = document.getElementById(`slot-${i}`);
+      slot.className = 'h-16 bg-surface-container-lowest rounded flex flex-col items-center justify-center p-1 transition-all';
+      slot.children[1].textContent = '--';
+      slot.children[1].className = 'font-terminal-code text-terminal-code text-terminal-dim';
+    });
+
+    decryptBar.style.width = '0%';
+    decryptPct.textContent = '0%';
+    shardsCountBadge.textContent = '0 / 5 БАЙТ';
+    uiPower.textContent = '82%';
+    uiDoorIndicator.textContent = '[ЗАБЛОКИРОВАНО] 0/5';
+    uiDoorIndicator.className = 'font-terminal-tag text-terminal-tag text-corruption-red font-bold';
+    statusPill.textContent = 'PATROL_MODE';
+    statusPill.className = 'font-terminal-tag text-terminal-tag text-neon-cyan bg-void-base px-space-sm py-0.5 rounded';
+    flashlightState.textContent = 'LIGHT: ACTIVE';
+    flashlightState.className = 'font-terminal-tag text-terminal-tag text-signal-amber bg-void-base px-space-sm py-0.5 rounded';
+    
+    gameModal.classList.add('hidden');
+    staticCanvas.style.opacity = '0';
+    sfx.setStaticProximity(0);
+    addLog('РЕИНИЦИАЛИЗАЦИЯ: ОПЕРАТИВНИК ВВЕДЕН В СЕКТОР', 'text-neon-cyan');
+  }
+
+  // Keyboard Event Binds
+  window.addEventListener('keydown', (e) => {
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+      e.preventDefault();
+    }
+    if (gameState.gameOver || gameState.victory) {
+      if (e.key === 'Enter') restartGame();
+      return;
+    }
+
+    switch (e.key) {
+      case 'w':
+      case 'W':
+      case 'ArrowUp':
+        movePlayer(0, -1);
+        break;
+      case 's':
+      case 'S':
+      case 'ArrowDown':
+        movePlayer(0, 1);
+        break;
+      case 'a':
+      case 'A':
+      case 'ArrowLeft':
+        movePlayer(-1, 0);
+        break;
+      case 'd':
+      case 'D':
+      case 'ArrowRight':
+        movePlayer(1, 0);
+        break;
+      case ' ':
+        toggleHide();
+        break;
+      case 'e':
+      case 'E':
+        triggerSonar();
+        break;
+    }
+  });
+
+  // Tactile Screen Buttons
+  document.getElementById('btn-up').onclick = () => movePlayer(0, -1);
+  document.getElementById('btn-down').onclick = () => movePlayer(0, 1);
+  document.getElementById('btn-left').onclick = () => movePlayer(-1, 0);
+  document.getElementById('btn-right').onclick = () => movePlayer(1, 0);
+  document.getElementById('btn-panic-hide').onclick = toggleHide;
+  document.getElementById('btn-pulse-sonar').onclick = triggerSonar;
+  document.getElementById('btn-restart').onclick = restartGame;
+
+  // Audio Toggle Button
+  document.getElementById('btn-audio-toggle').onclick = () => {
+    sfx.init();
+    const isMuted = sfx.toggleMute();
+    const icon = document.getElementById('audio-icon');
+    const label = document.getElementById('btn-audio-toggle').querySelector('span:last-child');
+    if (isMuted) {
+      icon.textContent = 'volume_off';
+      label.textContent = 'SFX [OFF]';
+    } else {
+      icon.textContent = 'volume_up';
+      label.textContent = 'SFX [ON]';
+    }
+  };
+
+  // Main Ticking Engine
+  setInterval(tickWatcherAI, 550);
+
+  function mainLoop() {
+    render();
+    requestAnimationFrame(mainLoop);
+  }
+  requestAnimationFrame(mainLoop);
+})();
+</script></main></div>
+<!-- SYSTEM ENTRY BRIEFING -->
+<div id="sys-entry" class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="background:rgba(7,7,20,0.97)">
+  <div class="w-full max-w-xl bg-void-surface border border-neon-cyan/30 rounded-lg p-6 shadow-[0_0_40px_rgba(0,240,255,0.12)]">
+    <div class="font-terminal-code text-neon-cyan text-sm mb-3 tracking-widest">П.Р.И.Н.Ц. // HANDSHAKE ACCEPTED</div>
+    <pre id="entry-face" class="font-terminal-code text-neon-cyan text-xs leading-tight mb-4 opacity-90" style="text-shadow:0 0 12px rgba(0,240,255,0.35)"></pre>
+    <div id="entry-log" class="font-terminal-code text-xs text-terminal-text space-y-1 min-h-[120px] mb-4"></div>
+    <button id="btn-enter-sector" class="w-full py-3 bg-neon-cyan text-void-base font-terminal-code text-xs font-bold uppercase tracking-widest rounded shadow-[0_0_20px_rgba(0,240,255,0.35)] hover:brightness-110">
+      ВОЙТИ В СЕКТОР [ENTER]
+    </button>
+  </div>
+</div>
+<script>
+(function(){
+  const faces = [
+`  ┌─────────────────┐
+  │  (•_•)   SYS OK │
+  │  <)  )╯  LINK   │
+  │  /  \    READY  │
+  └─────────────────┘`,
+`  ┌─────────────────┐
+  │  (⌐■_■) BREACH  │
+  │   ¬_¬    GATE   │
+  │  ╯) )>   OPEN   │
+  └─────────────────┘`,
+`  ┌─────────────────┐
+  │  ◕‿◕    OPERATOR│
+  │  ⊂(◉‿◉)⊃  MO    │
+  │  /|  |\  ONLINE │
+  └─────────────────┘`
+  ];
+  const lines = [
+    '> establishing tunnel to LIMBO core…',
+    '> signature: VIRUS-CAT // МО',
+    '> firewall: BYPASSED (operator vector)',
+    '> quarantine shell: soft-open',
+    '> injecting phantom into SUB-04…',
+    '> objective: 5 memory bytes → Alpha gate',
+    '> warning: entity WATCHER is active',
+    '> controls: WASD move · SPACE cloak · E sonar'
+  ];
+  const faceEl = document.getElementById('entry-face');
+  const logEl = document.getElementById('entry-log');
+  let fi = 0;
+  faceEl.textContent = faces[0];
+  setInterval(function(){ fi = (fi+1)%faces.length; faceEl.textContent = faces[fi]; }, 1200);
+  let li = 0;
+  function pushLine(){
+    if (li >= lines.length) return;
+    const d = document.createElement('div');
+    d.textContent = lines[li++];
+    d.style.color = li > 5 ? '#FF2A55' : (li > 3 ? '#00F0FF' : '#E1E2FF');
+    logEl.appendChild(d);
+    if (li < lines.length) setTimeout(pushLine, 280 + Math.random()*200);
+  }
+  setTimeout(pushLine, 400);
+  function closeEntry(){
+    const el = document.getElementById('sys-entry');
+    if (!el) return;
+    el.style.opacity = '0';
+    el.style.transition = 'opacity .5s';
+    setTimeout(function(){ el.remove(); }, 500);
+    try { if (window.sfx) sfx.init(); } catch(e){}
+  }
+  document.getElementById('btn-enter-sector').onclick = closeEntry;
+  window.addEventListener('keydown', function(e){
+    if (document.getElementById('sys-entry') && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault(); closeEntry();
+    }
+  });
+})();
+</script>
+
+</body></html>
