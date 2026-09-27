@@ -275,25 +275,76 @@
      SCENE 4 — FINAL AUTH
      ═══════════════════════════════════════════ -->
 <section class="scene" id="scene4">
-  <div class="auth-final">
-    <div class="final-rings">
-      <div class="final-ring r1"></div>
-      <div class="final-ring r2"></div>
-      <div class="final-ring r3"></div>
-      <div class="final-ring r4"></div>
-      <div class="final-core"></div>
+  <div class="auth-final" id="alignStage">
+    <div class="align-vortex" id="alignVortex">
+      <div class="av-ring r1"></div>
+      <div class="av-ring r2"></div>
+      <div class="av-ring r3"></div>
+      <div class="av-ring r4"></div>
+      <div class="av-core" id="alignCore"></div>
+      <div class="av-reticle" id="alignReticle"></div>
     </div>
-
-    <div class="final-code" id="finalCode">AUTH::000000</div>
-    <div class="final-title" id="finalTitle">VERIFYING CREDENTIALS</div>
-    <div class="final-sub" id="finalSub">ESTABLISHING PRIVILEGED SESSION</div>
-
+    <div class="final-code" id="finalCode">TRACK::------</div>
+    <div class="final-title" id="finalTitle">ALIGN TARGET</div>
+    <div class="final-sub" id="finalSub">RETICLE SEARCHING FOR CONVERGENCE</div>
     <div class="checkpoint-list" id="checkpointList"></div>
-
     <div class="final-bar"><i id="finalBar"></i></div>
     <div class="final-percent" id="finalPercent">00%</div>
+    <div class="align-hint" id="alignHint">УДЕРЖИВАЙТЕ ПРИЦЕЛ В ЦЕНТРЕ · КАК ПИЛОТ НА ЗАХВАТЕ ЦЕЛИ</div>
   </div>
 </section>
+<style>
+.align-vortex {
+  position: relative; width: 280px; height: 280px; margin: 0 auto 24px;
+}
+.av-ring {
+  position: absolute; left: 50%; top: 50%; border-radius: 50%;
+  border: 1px solid rgba(0,232,255,0.25);
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+}
+.av-ring.r1 { width: 90px; height: 90px; border-color: rgba(0,232,255,0.5); animation: spin 3s linear infinite; }
+.av-ring.r2 { width: 150px; height: 150px; border-top-color: transparent; animation: spinReverse 5s linear infinite; }
+.av-ring.r3 { width: 210px; height: 210px; border-style: dashed; border-color: rgba(0,232,255,0.15); animation: spin 12s linear infinite; }
+.av-ring.r4 { width: 270px; height: 270px; border-color: rgba(0,232,255,0.08); }
+.av-core {
+  position: absolute; left: 50%; top: 50%;
+  width: 48px; height: 48px; border-radius: 50%;
+  transform: translate(-50%,-50%);
+  background: radial-gradient(circle at 35% 35%, #1a3040, #000 60%, #000);
+  box-shadow: 0 0 40px rgba(0,232,255,0.35), inset 0 0 20px #000;
+  border: 1px solid rgba(0,232,255,0.4);
+}
+.av-core.locked {
+  box-shadow: 0 0 60px rgba(0,232,255,0.7), 0 0 120px rgba(0,232,255,0.3);
+  border-color: #00e8ff;
+}
+.av-reticle {
+  position: absolute; width: 36px; height: 36px;
+  left: 50%; top: 50%;
+  transform: translate(-50%,-50%);
+  border: 1px solid rgba(0,232,255,0.7);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(0,232,255,0.3);
+  transition: border-color .15s, box-shadow .15s;
+}
+.av-reticle::before, .av-reticle::after {
+  content: ''; position: absolute; background: rgba(0,232,255,0.7);
+}
+.av-reticle::before { left: 50%; top: -8px; bottom: -8px; width: 1px; transform: translateX(-50%); }
+.av-reticle::after { top: 50%; left: -8px; right: -8px; height: 1px; transform: translateY(-50%); }
+.av-reticle.aligned {
+  border-color: #1ec99a;
+  box-shadow: 0 0 20px rgba(30,201,154,0.55);
+}
+.align-hint {
+  margin-top: 14px; font: 9px var(--font-mono, monospace);
+  color: rgba(0,232,255,0.45); letter-spacing: 0.14em;
+}
+@keyframes spin { to { transform: translate(-50%,-50%) rotate(360deg); } }
+@keyframes spinReverse { to { transform: translate(-50%,-50%) rotate(-360deg); } }
+</style>
 
 <script>
 (() => {
@@ -941,10 +992,11 @@
 
   async function completeAuth() {
     scene('#scene4');
-    $('#hudSec').textContent = 'AUTHORIZING';
-    $('#finalTitle').textContent = 'VERIFYING CREDENTIALS';
-    $('#finalSub').textContent = 'ESTABLISHING PRIVILEGED SESSION';
+    $('#hudSec').textContent = 'TARGET ACQUISITION';
+    $('#finalTitle').textContent = 'ALIGN TARGET';
+    $('#finalSub').textContent = 'RETICLE SEARCHING FOR CONVERGENCE';
     $('#finalBar').style.width = '0%';
+    $('#finalCode').textContent = 'TRACK::' + hex(6);
 
     const cl = $('#checkpointList');
     cl.innerHTML = '';
@@ -956,31 +1008,61 @@
       cl.appendChild(row);
     });
 
-    for (let i = 0; i <= 100; i += 2) {
+    // Interactive ALIGN: hold reticle in center
+    const vortex = document.getElementById('alignVortex');
+    const reticle = document.getElementById('alignReticle');
+    const core = document.getElementById('alignCore');
+    let lockProgress = 0;
+    let aligned = false;
+    const onMove = (e) => {
+      if (!vortex) return;
+      const r = vortex.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      // reticle follows mouse with lag relative to center
+      const dx = (e.clientX - cx) * 0.35;
+      const dy = (e.clientY - cy) * 0.35;
+      const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+      if (reticle) {
+        reticle.style.left = `calc(50% + ${dx}px)`;
+        reticle.style.top = `calc(50% + ${dy}px)`;
+      }
+      aligned = dist < 42;
+      if (reticle) reticle.classList.toggle('aligned', aligned);
+      if (core) core.classList.toggle('locked', aligned);
+    };
+    window.addEventListener('mousemove', onMove);
+
+    // progress only while aligned
+    while (lockProgress < 100) {
+      if (aligned) {
+        lockProgress = Math.min(100, lockProgress + 1.8);
+        if (Math.random() > 0.85) tone(rand(600, 1200), 0.015, 'sine', 0.008);
+      } else {
+        lockProgress = Math.max(0, lockProgress - 0.6);
+      }
+      const i = Math.floor(lockProgress);
       $('#finalBar').style.width = i + '%';
       $('#finalPercent').textContent = String(i).padStart(2, '0') + '%';
-      $('#finalCode').textContent = 'AUTH::' + hex(6);
-      if (i === 20 || i === 40 || i === 60 || i === 80) {
-        glitchBurst(1);
-        tone(rand(400, 900), 0.02, 'square', 0.012);
-      }
-
+      $('#finalCode').textContent = 'TRACK::' + hex(6);
       if (i >= 12 && i < 30) markChk(0, 'CHECK');
       else if (i >= 30 && i < 50) markChk(1, 'CHECK');
       else if (i >= 50 && i < 70) markChk(2, 'CHECK');
       else if (i >= 70 && i < 88) markChk(3, 'CHECK');
       else if (i >= 88) markChk(4, 'CHECK');
-
-      await sleep(38);
+      await sleep(40);
     }
-
+    window.removeEventListener('mousemove', onMove);
     checkpoints.forEach((_, i) => markChk(i, 'OK'));
 
-    $('#finalCode').textContent = 'AUTH::GRANTED';
-    $('#finalTitle').textContent = 'ДОСТУП РАЗРЕШЁН';
-    $('#finalSub').textContent = 'SESSION P.R.I.N.C. / PRIVILEGED NODE';
+    $('#finalCode').textContent = 'TRACK::LOCKED';
+    $('#finalTitle').textContent = 'ЦЕЛЬ ЗАХВАЧЕНА';
+    $('#finalSub').textContent = 'ВНЕДРЕНИЕ ВИРУСА МО · ПЕРЕХОД В ПЕРИМЕТР';
     $('#hudSec').textContent = 'GRANTED';
     $('#hudSec').style.color = 'var(--green)';
+    if (core) core.classList.add('locked');
+    if (document.getElementById('alignHint'))
+      document.getElementById('alignHint').textContent = 'КАНАЛ ОТКРЫТ · ЗАГРУЗКА ПРОСТРАНСТВА…';
 
     scanSweep();
     glitchBurst(8);
@@ -988,11 +1070,11 @@
     tone(523, 0.14, 'sine', 0.05);
     setTimeout(() => tone(659, 0.14, 'sine', 0.05), 130);
     setTimeout(() => tone(784, 0.28, 'sine', 0.055), 260);
-    setTimeout(() => tone(1046, 0.4, 'sine', 0.05), 420);
 
-    await sleep(2100);
-    try { window.location.href = 'terminal.html'; }
-    catch { /* preview only */ }
+    // immersion threat words + eyes feel via glitch
+    await sleep(1600);
+    try { window.location.href = 'intro.html'; }
+    catch { /* preview */ }
   }
 
   function markChk(i, state) {
