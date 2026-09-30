@@ -252,7 +252,7 @@ body.cinema .letterbox-bottom { height: 28px; }
 /* ═══════════════════════════════════════════
    TACTICAL OVERLAY (v5 — interactive objects)
    ═══════════════════════════════════════════ */
-.tac-overlay {
+.tac-overlay { overflow: visible;
   position: absolute; inset: 0; z-index: 8; pointer-events: none;
   font-family: var(--font-mono);
 }
@@ -283,16 +283,86 @@ body.cinema .letterbox-bottom { height: 28px; }
 
 /* ═══ NEW v5: OBJECT BOXES become interactive ═══ */
 .obj-box {
-  position: absolute; border: 1px solid; pointer-events: auto;  /* ← теперь кликабельны */
+  position: absolute; border: 1px solid; pointer-events: auto;
+  overflow: visible;
   cursor: pointer;
-  animation: objBoxIn 0.4s var(--ease);
-  transition: box-shadow 0.25s, transform 0.25s, border-width 0.25s;
+  animation: objBoxIn 0.45s var(--ease);
+  transition: box-shadow 0.3s, transform 0.35s cubic-bezier(.22,1,.36,1), border-width 0.25s, opacity 0.35s, filter 0.3s;
+  opacity: 0.72;
+  transform: scale(0.92);
+  transform-origin: center center;
+  filter: saturate(0.85) brightness(0.92);
 }
-.obj-box:hover {
+.obj-box:hover,
+.obj-box.selected {
+  opacity: 1;
+  transform: scale(1.06);
   border-width: 2px;
-  box-shadow: 0 0 24px currentColor, inset 0 0 30px rgba(255,255,255,0.06);
-  transform: scale(1.01);
+  box-shadow: 0 0 28px currentColor, inset 0 0 30px rgba(255,255,255,0.08);
+  filter: saturate(1.1) brightness(1.05);
+  z-index: 12 !important;
 }
+.obj-box.glitching {
+  animation: objGlitch 0.35s steps(2) infinite;
+  filter: contrast(1.8) hue-rotate(40deg) saturate(2);
+  opacity: 0.4;
+}
+.obj-box.signal-lost {
+  opacity: 0.35;
+  filter: grayscale(1) brightness(0.4);
+}
+.obj-box.signal-lost .obj-fill img { opacity: 0.2; }
+.obj-box.signal-lost::after {
+  content: 'SIGNAL LOST';
+  position: absolute; inset: 0; z-index: 6;
+  display: flex; align-items: center; justify-content: center;
+  font: 700 9px var(--font-mono); letter-spacing: 0.12em;
+  color: #e02848; text-shadow: 0 0 8px #e02848;
+  background: rgba(0,0,0,0.55);
+  pointer-events: none;
+}
+@keyframes objGlitch {
+  0% { transform: scale(0.92) translate(0,0); }
+  25% { transform: scale(0.92) translate(-2px,1px); }
+  50% { transform: scale(0.94) translate(2px,-1px); }
+  75% { transform: scale(0.91) translate(-1px,2px); }
+  100% { transform: scale(0.92) translate(0,0); }
+}
+.cam-signal-error {
+  position: absolute; inset: 0; z-index: 15;
+  background: #050508;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0.6rem; text-align: center;
+  animation: sigFade 0.35s ease;
+}
+.cam-signal-error[hidden] { display: none !important; }
+@keyframes sigFade { from { opacity: 0; } to { opacity: 1; } }
+.cam-signal-error .sig-icon {
+  font-size: 1.4rem; color: #e02848;
+  text-shadow: 0 0 16px rgba(224,40,72,0.6);
+  animation: pulseDot 1.2s ease infinite;
+}
+.cam-signal-error .sig-title {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: 1.1rem; letter-spacing: 0.18em;
+  color: #e02848;
+  text-shadow: 0 0 20px rgba(224,40,72,0.5);
+}
+.cam-signal-error .sig-sub {
+  font-family: var(--font-mono); font-size: 0.72rem;
+  color: #6a7590; max-width: 360px; line-height: 1.55;
+  letter-spacing: 0.04em;
+}
+.cam-main.glitching img {
+  animation: camImgGlitch 0.2s steps(2) infinite;
+}
+@keyframes camImgGlitch {
+  0% { filter: contrast(1.4) hue-rotate(0deg); transform: translate(0,0); }
+  50% { filter: contrast(2) hue-rotate(60deg) saturate(0.3); transform: translate(-3px,1px); }
+  100% { filter: contrast(1.2) hue-rotate(-20deg); transform: translate(2px,-1px); }
+}
+
 .obj-box.selected {
   border-width: 2px;
   box-shadow: 0 0 32px currentColor, inset 0 0 40px rgba(255,255,255,0.1);
@@ -313,24 +383,99 @@ body.cinema .letterbox-bottom { height: 28px; }
 .obj-box .obj-corner-br { bottom: -1px; right: -1px; border-bottom: 2px solid; border-right: 2px solid; }
 
 .obj-label {
-  position: absolute; top: -1.4rem; left: -1px;
-  padding: 0.12rem 0.5rem; font-family: var(--font-mono); font-size: 0.55rem;
-  background: rgba(0,0,0,0.8); border: 1px solid; white-space: nowrap;
+  position: absolute !important;
+  top: auto !important;
+  bottom: -1.4rem !important;
+  left: -1px;
+  right: auto;
+  padding: 0.12rem 0.5rem;
+  font-family: var(--font-mono); font-size: 0.55rem;
+  background: rgba(0,0,0,0.9); border: 1px solid; white-space: nowrap;
   letter-spacing: 0.06em;
+  pointer-events: none;
+  z-index: 5;
 }
 .obj-box.cyan .obj-label { color: var(--cyan); border-color: var(--cyan); background: rgba(0,20,30,0.85); }
 .obj-box.amber .obj-label { color: var(--amber); border-color: var(--amber); background: rgba(30,20,0,0.85); }
 .obj-box.pink .obj-label { color: var(--pink); border-color: var(--pink); background: rgba(30,0,15,0.85); }
 
 .obj-sublabel {
-  position: absolute; bottom: -1.4rem; left: -1px;
-  padding: 0.1rem 0.4rem; font-family: var(--font-mono); font-size: 0.5rem;
-  background: rgba(0,0,0,0.75); color: #9aa8bc; white-space: nowrap;
-  letter-spacing: 0.06em; border: 1px solid rgba(255,255,255,0.1);
+  position: absolute !important;
+  top: auto !important;
+  bottom: -2.6rem !important;
+  left: -1px;
+  right: auto;
+  padding: 0.12rem 0.45rem;
+  font-family: var(--font-mono); font-size: 0.5rem;
+  background: rgba(0,0,0,0.9); color: #9aa8bc; white-space: nowrap;
+  letter-spacing: 0.06em; border: 1px solid rgba(255,255,255,0.12);
+  pointer-events: none;
+  z-index: 4;
 }
 .obj-sublabel b { color: var(--cyan); font-weight: 500; }
 .obj-sublabel .val-amber { color: var(--amber); }
 .obj-sublabel .val-red { color: var(--red); }
+
+/* Object cell filled with live crop of camera feed */
+.obj-box {
+  overflow: visible; /* labels outside */
+}
+.obj-box .obj-fill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+  background: #05070c;
+}
+.obj-box .obj-fill img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+  filter: contrast(1.1) saturate(1.05) brightness(0.92);
+  transform: scale(1.001);
+  transform-origin: center center;
+  transition: transform 0.35s cubic-bezier(.22,1,.36,1), filter 0.3s;
+}
+.obj-box:hover .obj-fill img,
+.obj-box.selected .obj-fill img {
+  transform: scale(1.2);
+  filter: contrast(1.2) saturate(1.18) brightness(1.06);
+}
+.obj-box .obj-fill::after {
+  content: '';
+  position: absolute; inset: 0;
+  box-shadow: inset 0 0 24px rgba(0,0,0,0.4);
+  background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.3));
+  pointer-events: none;
+  z-index: 1;
+}
+.obj-box .obj-label { z-index: 5; position: absolute !important; top: auto !important; bottom: -1.4rem !important; left: -1px; }
+.obj-box .obj-sublabel { z-index: 4; position: absolute !important; top: auto !important; bottom: -2.6rem !important; left: -1px; }
+.obj-box .obj-corner-bl,
+.obj-box .obj-corner-br { z-index: 3; }
+.track-line { z-index: 1 !important; }
+.obj-box:hover { z-index: 12 !important; }
+.obj-box.selected { z-index: 13 !important; }
+.obj-box .obj-scan {
+  position: absolute; left: 0; right: 0; height: 1px; z-index: 1;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0.45;
+  animation: objScan 2.4s linear infinite;
+  pointer-events: none;
+}
+@keyframes objScan {
+  from { top: 0; opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.35; }
+  to { top: 100%; opacity: 0; }
+}
+
 
 /* ═══ NEW v5: OBJECT TOOLTIP ═══ */
 .obj-tooltip {
@@ -346,6 +491,36 @@ body.cinema .letterbox-bottom { height: 28px; }
   font-family: var(--font-mono);
 }
 .obj-tooltip.show { opacity: 1; transform: translateY(0); }
+
+.obj-tooltip {
+  min-width: 420px !important;
+  max-width: 520px !important;
+}
+.obj-tooltip .tt-split {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 0;
+  border-bottom: 1px solid rgba(0,212,232,0.15);
+}
+.obj-tooltip .tt-media {
+  min-height: 160px;
+  background: #05070c;
+  border-right: 1px solid rgba(0,212,232,0.2);
+  overflow: hidden;
+}
+.obj-tooltip .tt-media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  min-height: 160px;
+  filter: contrast(1.08) saturate(1.05);
+}
+.obj-tooltip .tt-body { padding: 0.55rem 0.75rem; }
+@media (max-width: 700px) {
+  .obj-tooltip .tt-split { grid-template-columns: 1fr; }
+  .obj-tooltip .tt-media { min-height: 120px; border-right: none; border-bottom: 1px solid rgba(0,212,232,0.2); }
+}
+
 .obj-tooltip .tt-head {
   display: flex; justify-content: space-between; align-items: center;
   padding: 0.55rem 0.8rem;
@@ -1045,6 +1220,25 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
     scroll-behavior: auto !important;
   }
 }
+
+.neuro-bridge {
+  position: relative; margin-top: 0.75rem; padding: 0.55rem 0.6rem 0.4rem;
+  border: 1px solid rgba(0,212,232,0.18);
+  background: linear-gradient(180deg, rgba(0,20,30,0.5), rgba(2,4,10,0.8));
+  border-radius: 2px; overflow: hidden;
+}
+.neuro-bridge::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 30% 50%, rgba(0,212,232,0.06), transparent 60%),
+              radial-gradient(ellipse at 70% 40%, rgba(224,26,111,0.05), transparent 55%);
+}
+.neuro-label { font-family: var(--font-mono); font-size: 0.58rem; color: var(--cyan); letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+.neuro-stats { display: flex; gap: 1rem; font-family: var(--font-mono); font-size: 0.55rem; color: var(--text-dim); margin-bottom: 0.25rem; }
+.neuro-stats b { color: var(--cyan); font-weight: 600; }
+.neuro-stats b.alt { color: var(--green); }
+.neuro-stats b.amber { color: var(--amber); }
+#neuroCanvas { position: relative; z-index: 1; }
+
 </style>
 </head>
 <body class="terminal-mode">
@@ -1138,7 +1332,7 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
     <div class="cam-main" id="camMain">
       <!-- ═══ NEW v5: DRONE FEED WRAPPER ═══ -->
       <div class="cam-drone-feed" id="camDroneFeed">
-        <img id="camMainImg" src="img/cam19_shanghai.jpg" alt="Камера"
+        <img id="camMainImg" src="img/gorod/b1.png" alt="Камера"
              onerror="this.style.opacity=0;document.getElementById('camOffline')&&(document.getElementById('camOffline').style.display='flex')">
       </div>
 
@@ -1211,14 +1405,20 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
         <div class="off-title" id="camOffTitle">СИГНАЛ ПОТЕРЯН</div>
         <div class="off-sub" id="camOffSub">Канал заглушён или камера уничтожена.</div>
       </div>
+        <div class="cam-signal-error" id="camSignalError" hidden>
+          <div class="sig-icon">⚠</div>
+          <div class="sig-title" id="camSigTitle">СИГНАЛ ПОТЕРЯН</div>
+          <div class="sig-sub" id="camSigSub">Канал недоступен.</div>
+        </div>
+
     </div>
     <div class="cam-thumbs" id="camThumbs">
       <div class="cam-thumb active" data-cam="0">
-        <img src="img/cam19_shanghai.jpg" alt="" onerror="this.parentElement.classList.add('offline')">
+        <img src="img/gorod/b1.png" alt="" onerror="this.parentElement.classList.add('offline')">
         <div class="cam-thumb-label">#19 ШАНХАЙ</div>
       </div>
       <div class="cam-thumb" data-cam="1">
-        <img src="img/cam07_ruins.jpg" alt="" onerror="this.parentElement.classList.add('offline')">
+        <img src="img/ruini/n0.png" alt="" onerror="this.parentElement.classList.add('offline')">
         <div class="cam-thumb-label">#07 РУИНЫ</div>
       </div>
       <div class="cam-thumb offline" data-cam="2" data-offline="1">
@@ -1227,12 +1427,12 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
         <div class="cam-thumb-label">#03 РЁКАН</div>
       </div>
       <div class="cam-thumb" data-cam="3">
-        <img src="img/cam11_quiet.jpg" alt="" onerror="this.parentElement.classList.add('offline')">
+        <img src="img/pomestie/p0.png" alt="" onerror="this.parentElement.classList.add('offline')">
         <div class="cam-thumb-label">#11 ТИХОЕ</div>
       </div>
       <div class="cam-thumb" data-cam="4">
-        <img src="img/cam22_garden.jpg" alt="" onerror="this.parentElement.classList.add('offline')">
-        <div class="cam-thumb-label">#22 САД</div>
+        <img src="img/hram/h0.png" alt="" onerror="this.parentElement.classList.add('offline')">
+        <div class="cam-thumb-label">#22 ХРАМ</div>
       </div>
     </div>
   </div>
@@ -1254,23 +1454,7 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
             <div>LOAD <b class="alt" id="nbLoad">42%</b></div>
             <div>IMPULSE <b class="amber" id="nbImpulse">2841 Hz</b></div>
           </div>
-          <svg viewBox="0 0 400 110" preserveAspectRatio="none">
-            <path class="nb-line pink" d="M 10 55 Q 100 30, 200 55 T 390 55"/>
-            <path class="nb-line amber" d="M 10 55 Q 100 80, 200 55 T 390 55"/>
-            <path class="nb-line" d="M 10 55 Q 100 20, 200 55 T 390 55"/>
-            <path class="nb-line" d="M 10 55 L 80 30 L 150 80 L 220 25 L 290 75 L 390 55"/>
-            <path class="nb-pulse" d="M 10 55 L 80 30 L 150 80 L 220 25 L 290 75 L 390 55"/>
-            <path class="nb-pulse alt" d="M 10 55 L 80 30 L 150 80 L 220 25 L 290 75 L 390 55"/>
-            <path class="nb-pulse amber" d="M 10 55 L 80 30 L 150 80 L 220 25 L 290 75 L 390 55"/>
-            <circle class="nb-flash-ring" cx="80" cy="30" r="4"/>
-            <circle class="nb-flash-ring alt" cx="290" cy="75" r="4"/>
-            <circle class="nb-node" cx="10" cy="55" r="3.5"/>
-            <circle class="nb-node alt" cx="80" cy="30" r="3"/>
-            <circle class="nb-node" cx="150" cy="80" r="3"/>
-            <circle class="nb-node amber" cx="220" cy="25" r="3"/>
-            <circle class="nb-node" cx="290" cy="75" r="3"/>
-            <circle class="nb-node alt" cx="390" cy="55" r="3.5"/>
-          </svg>
+          <canvas id="neuroCanvas" width="800" height="140" style="width:100%;height:110px;display:block;"></canvas>
         </div>
 
         <div class="journal-actions">
@@ -1298,9 +1482,9 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
             <div class="sub">Активных секторов</div>
           </div>
           <div class="telem-metric">
-            <div class="value">04</div>
+            <div class="value" id="metricWatchers">01</div>
             <div class="label">Смотрящих в сети</div>
-            <div class="sub">Ючоу · Лань · Вега · Коикэ</div>
+            <div class="sub" id="metricWatchersSub">Хэ Ючоу</div>
           </div>
           <div class="telem-metric danger">
             <div class="value" style="color:var(--red)" id="metricZero">ZERO</div>
@@ -1384,16 +1568,30 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
     <div class="panel doc-card reveal fx-scan tilt-card glow-chase">
       <div class="panel-header"><span>Документ #01 // Перехват технологии</span><span>1998–2024</span></div>
       <div class="panel-body">
-        <h3>Генезис Лимбо: от терапии к государственному полигону</h3>
-        <p>Первоначально проект «Лимбо» разрабатывался в Институте Экспериментальной Неврологии как паллиативный метод спасения пациентов в терминальной коме.</p>
-        <p style="margin-top:0.55rem;">После переворота комплекс экспроприирован. В рамках <strong>П.Р.И.Н.Ц.</strong> технология стала карательной инстанцией высшей меры пресечения.</p>
+        <h3>П.Р.И.Н.Ц. // Лимбо — кратко</h3>
+        <p><strong>П.Р.И.Н.Ц.</strong> — программа регулирования и исполнения наказаний «Цефей». В Лимбо попадает сознание человека: боль, запахи, вкус есть, на тело в капсуле это не действует.</p>
+        <p style="margin-top:0.55rem;">Сюда направляют всех осуждённых по системе — от тех, кто ограбил, до серийных убийц. Сцена проверяет, раскаялся человек или нет.</p>
         <div class="quote-block">
-          «Физическая смерть дарует преждевременное освобождение от вины. П.Р.И.Н.Ц. лишает осуждённого этой привилегии.»
+          «Смерть освобождает слишком рано. Лимбо не даёт этой лазейки.»
           <div style="margin-top:0.4rem;font-style:normal;font-size:0.68rem;color:var(--cyan);">— Директива Минюста #104-0</div>
         </div>
-        <button class="doc-expand" data-target="doc1extra">▸ РАСКРЫТЬ ПРИЛОЖЕНИЕ</button>
+        <button class="doc-expand" data-target="doc1extra">▸ ХРОНОЛОГИЯ</button>
         <div class="doc-extra" id="doc1extra">
-          <p><strong style="color:var(--text)">Хронология:</strong> 1998 — первые испытания. 2009 — переворот и передача Временной Юстиции. 2016 — цикл 47 субъективных лет. 2024 — сеть штабов Восток/Запад.</p>
+          <p><strong style="color:var(--text)">Хронология системы:</strong></p>
+          <p style="margin-top:0.35rem;font-family:var(--font-mono);font-size:0.68rem;line-height:1.7;color:var(--text-dim)">
+            2011 — первые черновики<br>
+            2012 — начало разработки<br>
+            2015 — тестирование на животных<br>
+            2019 — первое удачное тестирование на человеке<br>
+            2020 — патент и признание учёных<br>
+            2026 — переход системы в руки правительства<br>
+            2027 — смена курса: среда для наказания осуждённых<br>
+            2028 — первые три теста провалены, есть жертвы<br>
+            2030 — ЕЦСН, штабы, первые рабочие Сцены<br>
+            2031 — присоединение Азии, Европы, Америки<br>
+            2032 — весь мир на ЕЦСН<br>
+            2039 — первые помехи и сбои в системе
+          </p>
           <p style="margin-top:0.4rem;color:var(--amber);font-family:var(--font-mono);font-size:0.68rem;">⚠ ЧАСТИЧНО РАССЕКРЕЧЕНО · LVL_4</p>
         </div>
       </div>
@@ -1401,9 +1599,10 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
     <div class="panel doc-card reveal reveal-d2 fx-scan tilt-card glow-chase">
       <div class="panel-header"><span>Документ #02 // Природа конструкта</span><span>Сценография</span></div>
       <div class="panel-body">
-        <h3>Феноменология Сцены // Парадокс соматики</h3>
-        <p>Каждая Сцена — замкнутый суррогат. Тело в крио-капсуле невредимо; сенсорная кора регистрирует предельную боль, запахи и ожоги.</p>
-        <p style="margin-top:0.55rem;">При пересечении границы — сенсорный распад и возврат. От «Квартиры 404» до пылающего Шанхая.</p>
+        <h3>Сцена // Как это устроено</h3>
+        <p>Сцена — отдельная «комната» в Лимбо. Она не пересекается с другими: свой ландшафт, свои правила, свой сценарий проверки.</p>
+        <p style="margin-top:0.55rem;">Сознание внутри чувствует боль, запахи, вкус. Тело Смотрящего лежит в капсуле — система следит за здоровьем, в Сцену идёт только сознание.</p>
+        <p style="margin-top:0.55rem;">В Лимбо попадают все по приговору: от грабителя до серийного убийцы. Сцена проверяет, есть ли раскаяние.</p>
         <div style="margin-top:0.85rem;">
           <div style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-dim);margin-bottom:0.2rem;">ИНТЕНСИВНОСТЬ БОЛИ · 100% [СУРРОГАТ]</div>
           <div class="bar"><div class="bar-fill" style="width:100%"></div></div>
@@ -1818,92 +2017,79 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
      ═══════════════════════════════════════════════════════════ */
   const cameras = [
     {
-      src: 'img/cam19_shanghai.jpg',
+      src: 'img/gorod/b1.png',
+      frames: ['img/gorod/b1.png','img/gorod/b2.png','img/gorod/b3.png','img/gorod/b4.png','img/gorod/b0.jpg'],
       name: 'КАМЕРА #19 // ШАНХАЙ · СЕКТОР НИЖНИЙ',
       sector: 'СЕКТОР ШАНХАЙ-02', quad: 'КВАДРАТ 44-B',
       coords: '31°13\'56.2"N 121°28\'09.4"E',
       limboState: 'ВТОРАЯ ФАЗА РАСПАДА',
       offline: false,
+      theme: 'gorod',
       objects: [
-        { id:'O1', box: { x: 12, y: 18, w: 22, h: 42 }, label: 'OBJECT_01: МЯСОЙ БЛОК C-12', sub: 'ЦЕЛОСТНОСТЬ 34.2%', color: 'cyan', distance: '218.4м', height: '84м', static: 'НЕТ',
-          type: 'СТРОЕНИЕ / КОММЕРЧЕСКИЙ КОМПЛЕКС',
-          material: 'БЕТОН·СТЕКЛО·СТАЛЬ',
-          history: 'Построен 2021. Заброшен после инцидента «Серый дождь».',
-          integrity: 34.2, threat: 12, temp: 18.4 },
-        { id:'O3', box: { x: 58, y: 22, w: 18, h: 38 }, label: 'OBJECT_03: ТРАССА ЭВАКУАЦИИ', sub: 'МАРШРУТ ОПЕРАТИВНЫЙ', color: 'amber', distance: '142.8м', height: '—', static: 'ДА',
-          type: 'МАРШРУТ / ПУТЬ ОТХОДА',
-          material: 'АСФАЛЬТ·МЕТАЛЛ',
-          history: 'Проложен штабом Восток. Активно используется.',
-          integrity: 88.0, threat: 4, temp: 22.1 },
-        { id:'O2', box: { x: 30, y: 62, w: 26, h: 24 }, label: 'OBJECT_02: СИНТЕТИЧЕСКАЯ ФЛОРА', sub: 'АНОМАЛИЯ 8.4%', color: 'pink', distance: '212.8м', height: '84м', static: 'ДА',
-          type: 'БИОМ / СИНТ. РАСТИТЕЛЬНОСТЬ',
-          material: 'ГИБРИД·ГЕН-МОД',
-          history: 'Выведена для сектора «Шанхай-02». Показывает аномалии.',
-          integrity: 91.6, threat: 34, temp: 24.7 },
+        { id:'O1', img: 'img/gorod/b1.png', frames: ['img/gorod/b1.png','img/gorod/b2.png','img/gorod/b0.jpg'], box: { w: 22, h: 32 }, label: 'OBJECT_01: МЯСОЙ БЛОК C-12', color: 'cyan', distance: '218.4м', height: '84м', static: 'НЕТ', type: 'СТРОЕНИЕ', material: 'БЕТОН·СТЕКЛО', history: 'Заброшен после «Серого дождя».', integrity: 34, threat: 12, temp: 18 },
+        { id:'O2', img: 'img/gorod/b2.png', frames: ['img/gorod/b2.png','img/gorod/b4.png','img/gorod/b3.png'], box: { w: 24, h: 26 }, label: 'OBJECT_02: СИНТЕТИЧЕСКАЯ ФЛОРА', color: 'pink', distance: '212.8м', height: '12м', static: 'ДА', type: 'БИОМ', material: 'ГИБРИД', history: 'Реагирует на оператора A-55.', integrity: 88, threat: 18, temp: 24 },
+        { id:'O3', img: 'img/gorod/b3.png', frames: ['img/gorod/b3.png','img/gorod/b1.png','img/gorod/b4.png'], box: { w: 20, h: 30 }, label: 'OBJECT_03: ТРАССА ЭВАКУАЦИИ', color: 'amber', distance: '142.8м', height: '—', static: 'ДА', type: 'МАРШРУТ', material: 'СТАЛЬ', history: 'Штаб Восток. Активен.', integrity: 76, threat: 6, temp: 21 },
       ],
     },
     {
-      src: 'img/cam07_ruins.jpg',
+      src: 'img/ruini/n0.png',
+      frames: ['img/ruini/n0.png','img/ruini/n1.png','img/ruini/n2.png','img/ruini/n3.png','img/ruini/n4.png'],
       name: 'КАМЕРА #07 // РУИНЫ · ЭСТАКАДА',
       sector: 'СЕКТОР РУИНЫ-07', quad: 'КВАДРАТ 12-C',
       coords: '31°14\'02.8"N 121°29\'14.2"E',
       limboState: 'ТРЕТЬЯ ФАЗА КОЛЛАПСА',
       offline: false,
+      theme: 'ruini',
       objects: [
-        { id:'O4', box: { x: 20, y: 26, w: 30, h: 34 }, label: 'OBJECT_04: ЭСТАКАДА', sub: 'ЦЕЛОСТНОСТЬ 12.8%', color: 'cyan', distance: '342.1м', height: '42м', static: 'ДА',
-          type: 'ИНФРАСТРУКТУРА',
-          material: 'МЕТАЛЛ·БЕТОН',
-          history: 'Дорожная развязка до коллапса. Сейчас — фрагмент руин.',
-          integrity: 12.8, threat: 58, temp: 31.2 },
-        { id:'O5', box: { x: 62, y: 42, w: 22, h: 26 }, label: 'OBJECT_05: ЛОКОМОТИВ', sub: 'НЕИДЕНТИФИЦИРОВАН', color: 'amber', distance: '88.4м', height: '—', static: 'НЕТ',
-          type: 'ТРАНСПОРТ / АНОМАЛИЯ',
-          material: 'МЕТАЛЛ·НЕИЗВЕСТНО',
-          history: 'Данные повреждены. Обнаружен в руинах сектора 07.',
-          integrity: 44.4, threat: 76, temp: 41.8 },
+        { id:'O4', img: 'img/ruini/n1.png', frames: ['img/ruini/n1.png','img/ruini/n2.png','img/ruini/n0.png'], box: { w: 26, h: 34 }, label: 'OBJECT_04: ЭСТАКАДА', color: 'cyan', distance: '96.2м', height: '18м', static: 'НЕТ', type: 'СТРУКТУРА', material: 'БЕТОН·АРМАТУРА', history: 'Обрушение после импульса Лимбо.', integrity: 22, threat: 55, temp: 14 },
+        { id:'O5', img: 'img/ruini/n3.png', frames: ['img/ruini/n3.png','img/ruini/n4.png','img/ruini/n2.png'], box: { w: 20, h: 28 }, label: 'OBJECT_05: ТРЕЩИНА', color: 'amber', distance: '48.0м', height: '—', static: 'НЕТ', type: 'АНОМАЛИЯ', material: 'КАМЕНЬ', history: 'Расширяется каждый цикл рендера.', integrity: 41, threat: 38, temp: 11 },
       ],
     },
-    { src: '', name: 'КАМЕРА #03 // РЁКАН · КАНАЛ ПОТЕРЯН', offline: true,
-      sector: 'СЕКТОР РЁКАН-03', quad: '—',
-      coords: '—', limboState: 'КАНАЛ ПОТЕРЯН',
+    {
+      src: '',
+      frames: [],
+      name: 'КАМЕРА #03 // РЁКАН · КАНАЛ ПОТЕРЯН',
+      sector: 'РЁКАН · OFFLINE', quad: '—',
+      coords: '—',
+      limboState: 'НЕТ ДАННЫХ',
+      offline: true,
       offTitle: 'КАНАЛ ЗАГЛУШЁН',
-      offSub: 'Сектор Рёкан: ответ станции отсутствует. Вероятна атака на ретранслятор или физическое уничтожение камеры. Требуется эскалация LVL_6.' },
+      offSub: 'Сектор Рёкан: ответ станции отсутствует. Вероятна атака на ретранслятор или физическое уничтожение камеры. Требуется эскалация LVL_6.',
+      theme: 'offline',
+      objects: [],
+    },
     {
-      src: 'img/cam11_quiet.jpg',
+      src: 'img/pomestie/p0.png',
+      frames: ['img/pomestie/p0.png','img/pomestie/p1.png','img/pomestie/p2.png','img/pomestie/p3.png','img/pomestie/p4.png'],
       name: 'КАМЕРА #11 // ТИХОЕ МЕСТО · ЮЖНЫЙ ФАСАД',
-      sector: 'СЕКТОР ТИХОЕ-11', quad: 'КВАДРАТ 08-A',
-      coords: '31°12\'44.8"N 121°30\'01.1"E',
-      limboState: 'СТАБИЛЬНАЯ ЗОНА',
+      sector: 'ТИХОЕ МЕСТО', quad: 'ФАСАД-ЮГ',
+      coords: '44°26\'12.1"N 26°06\'33.0"E',
+      limboState: 'ФАЗА СТАГНАЦИИ',
       offline: false,
+      theme: 'pomestie',
       objects: [
-        { id:'O6', box: { x: 40, y: 30, w: 22, h: 40 }, label: 'OBJECT_06: ЖИЛОЙ БЛОК', sub: 'ЦЕЛОСТНОСТЬ 88.4%', color: 'cyan', distance: '128.2м', height: '68м', static: 'ДА',
-          type: 'ЖИЛОЕ СТРОЕНИЕ',
-          material: 'БЕТОН·СТЕКЛО',
-          history: 'Построен 2018. Используется штабом как наблюдательный пункт.',
-          integrity: 88.4, threat: 8, temp: 19.2 },
+        { id:'O6', img: 'img/pomestie/p1.png', frames: ['img/pomestie/p1.png','img/pomestie/p2.png','img/pomestie/p0.png'], box: { w: 28, h: 36 }, label: 'OBJECT_06: ЮЖНЫЙ ФАСАД', color: 'cyan', distance: '64.1м', height: '22м', static: 'ДА', type: 'СТРОЕНИЕ', material: 'КАМЕНЬ·ШТУКАТУРКА', history: 'Сцена-эксперимент. Детективный контур повреждён.', integrity: 67, threat: 28, temp: 9 },
+        { id:'O7', img: 'img/pomestie/p3.png', frames: ['img/pomestie/p3.png','img/pomestie/p4.png','img/pomestie/p1.png'], box: { w: 18, h: 24 }, label: 'OBJECT_07: ТЕНЬ В ОКУТРИ', color: 'pink', distance: '71.4м', height: '—', static: 'НЕТ', type: 'АНОМАЛИЯ', material: '—', history: 'Силуэт не совпадает с базой субъектов.', integrity: 15, threat: 72, temp: 6 },
       ],
     },
     {
-      src: 'img/cam22_garden.jpg',
-      name: 'КАМЕРА #22 // РЁКАН · ВНУТРЕННИЙ САД',
-      sector: 'СЕКТОР РЁКАН-22', quad: 'КВАДРАТ 21-D',
-      coords: '31°13\'11.8"N 121°28\'22.4"E',
-      limboState: 'ПЕРВАЯ ФАЗА РАСПАДА',
+      src: 'img/hram/h0.png',
+      frames: ['img/hram/h0.png','img/hram/h1.png','img/hram/h2.png','img/hram/h3.png','img/hram/h4.png'],
+      name: 'КАМЕРА #22 // ХРАМ · ВНУТРЕННИЙ ДВОР',
+      sector: 'ХРАМ / САД', quad: 'ДВОР-01',
+      coords: '35°00\'18.4"N 135°46\'22.1"E',
+      limboState: 'СТАБИЛЬНАЯ ИЛЛЮЗИЯ',
       offline: false,
+      theme: 'hram',
       objects: [
-        { id:'O7', box: { x: 25, y: 28, w: 22, h: 44 }, label: 'OBJECT_07: КАМЕННЫЙ ФОНАРЬ', sub: 'СТАБИЛЬНОСТЬ 94.4%', color: 'cyan', distance: '38.4м', height: '2.4м', static: 'ДА',
-          type: 'ДЕКОР / ОСВЕЩЕНИЕ',
-          material: 'КАМЕНЬ·СТЕКЛО',
-          history: 'Элемент сцены «Рёкан». Установлен в 2024.',
-          integrity: 94.4, threat: 2, temp: 14.8 },
-        { id:'O8', box: { x: 58, y: 34, w: 30, h: 42 }, label: 'OBJECT_08: ДОМ РЁКАН', sub: 'АНОМАЛИЯ 2.8%', color: 'amber', distance: '68.2м', height: '4.8м', static: 'ДА',
-          type: 'ПОСТРОЙКА / СЦЕНА',
-          material: 'ДЕРЕВО·БУМАГА',
-          history: 'Основное строение сцены «Рёкан». Активная симуляция.',
-          integrity: 97.2, threat: 22, temp: 16.4 },
+        { id:'O8', img: 'img/hram/h1.png', frames: ['img/hram/h1.png','img/hram/h2.png','img/hram/h0.png'], box: { w: 22, h: 30 }, label: 'OBJECT_08: ВРАТА ХРАМА', color: 'amber', distance: '28.4м', height: '6м', static: 'ДА', type: 'ПОСТРОЙКА', material: 'ДЕРЕВО·МЕДЬ', history: 'Святилище сцены. Ёкаи в периметре.', integrity: 91, threat: 15, temp: 17 },
+        { id:'O9', img: 'img/hram/h3.png', frames: ['img/hram/h3.png','img/hram/h4.png','img/hram/h1.png'], box: { w: 18, h: 26 }, label: 'OBJECT_09: ФОНАРЬ', color: 'cyan', distance: '12.0м', height: '2.4м', static: 'ДА', type: 'ПРЕДМЕТ', material: 'БУМАГА·БЕТОН', history: 'Источник локального освещения сцены.', integrity: 98, threat: 2, temp: 19 },
+        { id:'O10', img: 'img/pompom/g1.png', frames: ['img/pompom/g1.png','img/pompom/g2.png','img/pompom/g0.png'], box: { w: 16, h: 22 }, label: 'OBJECT_10: ТЕНЬ ЁКАЯ', color: 'pink', distance: '9.8м', height: '—', static: 'НЕТ', type: 'СУЩНОСТЬ', material: '—', history: 'Сигнатура Дзёрогумо. Не подтверждена.', integrity: 44, threat: 61, temp: 13 },
       ],
     },
   ];
   let currentCam = 0;
+  setTimeout(function(){ updateWatchersForCam(cameras[0]); }, 300);
   const camMain = $('#camMain');
   const camFeed = $('#camDroneFeed');
   const camImg = $('#camMainImg');
@@ -1974,21 +2160,25 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
     const relY = boxRect.top - camRect.top;
     const relR = boxRect.right - camRect.left;
 
+    const ttImg = (obj.frames && obj.frames.length ? obj.frames[obj._fi || 0] : null) || obj.img || '';
     tt.innerHTML = `
       <div class="tt-head">
         <span>${obj.label.split(':')[0] || 'OBJECT'} · РАСШИФРОВКА</span>
         <span class="close" data-close-tt>✕</span>
       </div>
-      <div class="tt-body">
-        <div class="row"><span class="k">КЛАССИФИКАЦИЯ</span><span class="v cyan">${obj.type || '—'}</span></div>
-        <div class="row"><span class="k">МАТЕРИАЛ</span><span class="v">${obj.material || '—'}</span></div>
-        <div class="row"><span class="k">ЦЕЛОСТНОСТЬ</span><span class="v ${obj.integrity < 40 ? 'red' : obj.integrity < 70 ? 'amber' : 'green'}">${obj.integrity?.toFixed(1) ?? '—'}%</span></div>
-        <div class="row"><span class="k">ДИСТАНЦИЯ</span><span class="v cyan">${obj.distance}</span></div>
-        <div class="row"><span class="k">ВЫСОТА</span><span class="v">${obj.height}</span></div>
-        <div class="row"><span class="k">ТЕМПЕРАТУРА</span><span class="v">${obj.temp?.toFixed(1) ?? '—'} °C</span></div>
-        <div class="row"><span class="k">УРОВЕНЬ УГРОЗЫ</span><span class="v ${obj.threat > 60 ? 'red' : obj.threat > 30 ? 'amber' : 'green'}">${obj.threat}/100</span></div>
-        <div class="row"><span class="k">STATIC</span><span class="v ${obj.static === 'ДА' ? 'amber' : 'red'}">${obj.static}</span></div>
-        <div class="desc">${obj.history || ''}</div>
+      <div class="tt-split">
+        <div class="tt-media"><img src="${ttImg}" alt="" onerror="this.style.opacity=0"></div>
+        <div class="tt-body">
+          <div class="row"><span class="k">КЛАССИФИКАЦИЯ</span><span class="v cyan">${obj.type || '—'}</span></div>
+          <div class="row"><span class="k">МАТЕРИАЛ</span><span class="v">${obj.material || '—'}</span></div>
+          <div class="row"><span class="k">ЦЕЛОСТНОСТЬ</span><span class="v ${obj.integrity < 40 ? 'red' : obj.integrity < 70 ? 'amber' : 'green'}">${obj.integrity?.toFixed?.(1) ?? obj.integrity ?? '—'}%</span></div>
+          <div class="row"><span class="k">ДИСТАНЦИЯ</span><span class="v cyan">${obj.distance}</span></div>
+          <div class="row"><span class="k">ВЫСОТА</span><span class="v">${obj.height}</span></div>
+          <div class="row"><span class="k">ТЕМПЕРАТУРА</span><span class="v">${obj.temp?.toFixed?.(1) ?? obj.temp ?? '—'} °C</span></div>
+          <div class="row"><span class="k">УРОВЕНЬ УГРОЗЫ</span><span class="v ${obj.threat > 60 ? 'red' : obj.threat > 30 ? 'amber' : 'green'}">${obj.threat}/100</span></div>
+          <div class="row"><span class="k">STATIC</span><span class="v ${obj.static === 'ДА' ? 'amber' : 'red'}">${obj.static}</span></div>
+          <div class="desc">${obj.history || ''}</div>
+        </div>
       </div>
       <div class="tt-footer">
         <span>ID: ${obj.id} · ${obj.label.split(':')[0]}</span>
@@ -2041,16 +2231,111 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
     tacOverlay.querySelectorAll('.obj-box, .track-line, .cam-alert, .obj-tooltip').forEach(el => el.remove());
     if (cam.offline || !cam.objects) return;
 
-    cam.objects.forEach((obj) => {
-      const b = obj.box;
+    // non-overlapping random layout each render
+    const placed = [];
+    function overlaps(a, pad) {
+      for (const p of placed) {
+        if (a.x < p.x + p.w + pad && a.x + a.w + pad > p.x &&
+            a.y < p.y + p.h + pad && a.y + a.h + pad > p.y) return true;
+      }
+      return false;
+    }
+    function placeBox(prefer) {
+      const w = prefer.w || (16 + Math.random() * 12);
+      const h = prefer.h || (18 + Math.random() * 16);
+      for (let attempt = 0; attempt < 40; attempt++) {
+        const x = 4 + Math.random() * (78 - w);
+        const y = 10 + Math.random() * (52 - h); // leave room for labels under
+        const box = { x, y, w, h };
+        if (!overlaps(box, 2.5)) {
+          placed.push(box);
+          return box;
+        }
+      }
+      // fallback grid slot
+      const slot = placed.length;
+      const box = {
+        x: 6 + (slot % 3) * 30,
+        y: 14 + Math.floor(slot / 3) * 28,
+        w: Math.min(w, 24),
+        h: Math.min(h, 26)
+      };
+      placed.push(box);
+      return box;
+    }
+
+    // thematic data pools by image keyword / index
+    const DATA_POOLS = {
+      ruin: [
+        { title: 'ОБРУШЕННЫЙ ПРОЛЁТ', type: 'СТРУКТУРА / АВАРИЯ', material: 'БЕТОН·АРМАТУРА', history: 'Обрушение после сейсмического импульса Лимбо.', threat: [40, 80], static: 'НЕТ' },
+        { title: 'ТРЕЩИНА ФУНДАМЕНТА', type: 'ГЕОМЕТРИЯ / СБОЙ', material: 'КАМЕНЬ·ПЫЛЬ', history: 'Расширяется при каждом цикле рендера.', threat: [20, 55], static: 'НЕТ' },
+      ],
+      flora: [
+        { title: 'СИНТЕТИЧЕСКАЯ ФЛОРА', type: 'БИОМ / ГЕН-МОД', material: 'ГИБРИД·ХЛОРОФИЛЛ', history: 'Выведена для сектора Шанхай-02. Реагирует на оператора.', threat: [5, 25], static: 'ДА' },
+        { title: 'КОРНЕВАЯ СЕТЬ', type: 'АНОМАЛИЯ / РОСТ', material: 'БИОМАССА', history: 'Корни проникают в капсульные каналы.', threat: [15, 45], static: 'НЕТ' },
+      ],
+      urban: [
+        { title: 'МЯСОЙ БЛОК C-12', type: 'СТРОЕНИЕ / КОММЕРЦИЯ', material: 'БЕТОН·СТЕКЛО·СТАЛЬ', history: 'Заброшен после инцидента «Серый дождь».', threat: [10, 30], static: 'НЕТ' },
+        { title: 'ТРАССА ЭВАКУАЦИИ', type: 'МАРШРУТ / ОТХОД', material: 'АСФАЛЬТ·МЕТАЛЛ', history: 'Проложен штабом Восток. Периодически заметается туманом.', threat: [4, 18], static: 'ДА' },
+        { title: 'НЕБЕСНЫЙ МОСТ', type: 'ИНФРАСТРУКТУРА', material: 'СТАЛЬ·КАБЕЛЬ', history: 'Соединяет кластеры 4 и 7. Частично обесточен.', threat: [8, 35], static: 'ДА' },
+      ],
+      eye: [
+        { title: 'ОКУЛУС НАБЛЮДЕНИЯ', type: 'АРТЕФАКТ / ZERO', material: 'НЕИЗВЕСТНО', history: 'Сигнатура совпадает с субъектом Сюань У.', threat: [60, 95], static: 'НЕТ' },
+        { title: 'СФЕРА ПРИСУТСТВИЯ', type: 'АНОМАЛИЯ', material: 'ЭФИР·СВЕТ', history: 'Появляется только при целостности сигнала >80%.', threat: [30, 70], static: 'НЕТ' },
+      ],
+      default: [
+        { title: 'НЕОПОЗНАННЫЙ ОБЪЕКТ', type: 'КЛАСС / UNKNOWN', material: '—', history: 'Сигнатура размыта. Требуется повторное сканирование.', threat: [10, 50], static: 'НЕТ' },
+      ]
+    };
+    function poolForSrc(src) {
+      const s = (src || '').toLowerCase();
+      if (s.includes('ruini') || s.includes('/n')) return DATA_POOLS.ruin;
+      if (s.includes('pompom') || s.includes('/g') || s.includes('flora')) return DATA_POOLS.flora;
+      if (s.includes('hram') || s.includes('/h')) return DATA_POOLS.urban.concat(DATA_POOLS.eye);
+      if (s.includes('pomestie') || s.includes('/p')) return DATA_POOLS.urban;
+      if (s.includes('gorod') || s.includes('/b')) return DATA_POOLS.urban;
+      return DATA_POOLS.default;
+    }
+    function mutateData(obj) {
+      const src = (obj.frames && obj.frames[obj._fi || 0]) || obj.img || '';
+      const pool = poolForSrc(src);
+      const pick = pool[Math.floor(Math.random() * pool.length)];
+      const threat = Math.floor(pick.threat[0] + Math.random() * (pick.threat[1] - pick.threat[0]));
+      obj.label = (obj.id || 'OBJ') + ': ' + pick.title;
+      // keep OBJECT_0N style if original had it
+      if (obj._baseLabel) {
+        const prefix = obj._baseLabel.split(':')[0];
+        obj.label = prefix + ': ' + pick.title;
+      }
+      obj.type = pick.type;
+      obj.material = pick.material;
+      obj.history = pick.history;
+      obj.static = pick.static;
+      obj.threat = threat;
+      obj.integrity = Math.round((100 - threat * 0.6 - Math.random() * 15) * 10) / 10;
+      obj.distance = (40 + Math.random() * 280).toFixed(1) + 'м';
+      obj.height = Math.random() > 0.3 ? (Math.floor(3 + Math.random() * 90) + 'м') : '—';
+      obj.temp = Math.round((12 + Math.random() * 18) * 10) / 10;
+    }
+
+    cam.objects.forEach((obj, idx) => {
+      if (!obj._baseLabel) obj._baseLabel = obj.label;
+      // reshuffle position
+      const b = placeBox(obj.box || { w: 20, h: 28 });
+      obj.box = b;
+      mutateData(obj);
+
       const box = document.createElement('div');
-      box.className = `obj-box ${obj.color}`;
+      box.className = `obj-box ${obj.color || 'cyan'}`;
       box.style.left = b.x + '%';
       box.style.top = b.y + '%';
       box.style.width = b.w + '%';
       box.style.height = b.h + '%';
       box.dataset.objId = obj.id;
+      const imgSrc = (obj.frames && obj.frames.length ? obj.frames[obj._fi || 0] : null) || obj.img || cam.src || '';
       box.innerHTML = `
+        <div class="obj-fill"><img src="${imgSrc}" alt="" onerror="this.style.opacity=0;this.parentElement.style.background='linear-gradient(135deg,#0a1018,#121a28)'"></div>
+        <div class="obj-scan"></div>
         <div class="obj-label">${obj.label}</div>
         <div class="obj-corner-bl"></div>
         <div class="obj-corner-br"></div>
@@ -2058,82 +2343,60 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
       `;
       tacOverlay.appendChild(box);
 
-      // Tracking line down
+      // tracking tail behind labels
       const tl = document.createElement('div');
-      tl.className = `track-line ${obj.color}`;
+      tl.className = `track-line ${obj.color || 'cyan'}`;
       tl.style.left = (b.x + b.w / 2) + '%';
       tl.style.top = (b.y + b.h) + '%';
       tl.style.width = '1px';
-      tl.style.height = '24%';
-      tl.style.color = `var(--${obj.color})`;
+      tl.style.height = Math.min(18, 88 - b.y - b.h) + '%';
       tacOverlay.appendChild(tl);
 
-      // ═══ NEW v5: click handler ═══
+      // wire hover/click if handlers exist later via delegation
       box.addEventListener('click', (e) => {
         e.stopPropagation();
-        document.querySelectorAll('.obj-box.selected').forEach(b => b.classList.remove('selected'));
+        document.querySelectorAll('.obj-box').forEach(x => x.classList.remove('selected'));
         box.classList.add('selected');
-        showObjectTooltip(obj, box);
-        servoPulse();
-        beep(880 + Math.random() * 400, 0.05, 'sine', 0.025);
-        camGlitch();
-      });
-
-      // Hover — микро-звук
-      box.addEventListener('mouseenter', () => {
-        beep(1400 + Math.random() * 300, 0.02, 'sine', 0.008);
+        if (typeof showObjectTooltip === 'function') showObjectTooltip(obj, box);
       });
     });
   }
 
-  // Клик мимо бокса — закрыть тултип
-  camMain.addEventListener('click', (e) => {
-    if (!e.target.closest('.obj-box')) {
-      closeObjectTooltip();
-    }
-  });
 
-  /* ---- Random alerts ---- */
-  const alertPhrases = [
-    '⚠ ОБНАРУЖЕНА АНОМАЛИЯ', '⚠ СЕНСОРНЫЙ ПИК', '⚠ РАССОГЛАСОВАНИЕ',
-    '⚠ ПОТЕРЯ ТРЕКА', '⚠ СПЕКТР ИСКАЖЁН', '⚠ ДРЕЙФ ОБЪЕКТА',
-    '⚠ ПРОСЛУШКА НЕЙРО-КАНАЛА', '⚠ СЛЕД СЮАНЬ У', '⚠ ПОПЫТКА ВЗЛОМА',
-    '⚠ КВАНТОВАЯ ФЛУКТУАЦИЯ', '⚠ НЕСАНКЦИОНИРОВАННЫЙ ДОСТУП'
-  ];
-  function spawnAlert() {
-    if (!camMain) return;
-    const cam = cameras[currentCam];
-    if (cam.offline) return;
-    const a = document.createElement('div');
-    a.className = 'cam-alert';
-    a.textContent = pick(alertPhrases);
-    a.style.left = (10 + Math.random() * 70) + '%';
-    a.style.top = (10 + Math.random() * 70) + '%';
-    tacOverlay.appendChild(a);
-    beep(rand(600, 900), 0.04, 'sine', 0.015);
-    setTimeout(() => a.remove(), 2000);
+  
+  const SCENE_WATCHERS = {
+    gorod: { n: 6, names: 'Хэ Ючоу · Цай Лань · Юй Цюэ · Юн Ли Мун · Юмико · Ичиро Ивасаки' },
+    ruini: { n: 1, names: 'Хэ Ючоу' },
+    offline: { n: 1, names: 'Хэ Ючоу' },
+    pomestie: { n: 2, names: 'Цай Лань · Хэ Ючоу', flicker: 'Селина Вега' },
+    hram: { n: 1, names: 'Хэ Ючоу' },
+  };
+  function updateWatchersForCam(cam) {
+    const theme = (cam && cam.theme) || 'gorod';
+    const w = SCENE_WATCHERS[theme] || SCENE_WATCHERS.gorod;
+    const el = document.getElementById('metricWatchers');
+    const sub = document.getElementById('metricWatchersSub');
+    if (!el || !sub) return;
+    if (w.flicker) {
+      let flip = false;
+      el.textContent = String(w.n).padStart(2, '0');
+      sub.innerHTML = w.names + ' · <span id="flickerSelina" style="opacity:0.35;color:var(--pink)">Селина Вега</span>';
+      if (window._selinaFlicker) clearInterval(window._selinaFlicker);
+      window._selinaFlicker = setInterval(() => {
+        flip = !flip;
+        el.textContent = String(flip ? w.n + 1 : w.n).padStart(2, '0');
+        const fs = document.getElementById('flickerSelina');
+        if (fs) {
+          fs.style.opacity = flip ? '1' : '0.2';
+          fs.style.textShadow = flip ? '0 0 8px rgba(224,26,111,0.6)' : 'none';
+        }
+      }, 1600);
+    } else {
+      if (window._selinaFlicker) { clearInterval(window._selinaFlicker); window._selinaFlicker = null; }
+      el.textContent = String(w.n).padStart(2, '0');
+      sub.textContent = w.names;
+    }
   }
-  setInterval(() => { if (Math.random() > 0.55) spawnAlert(); }, 3000);
-
-  /* ---- Random floating classified stamps ---- */
-  setInterval(() => {
-    const cam = cameras[currentCam];
-    if (cam.offline) return;
-    if (Math.random() > 0.85) {
-      const s = tacOverlay.querySelector('.classified-stamp') || (() => {
-        const el = document.createElement('div');
-        el.className = 'classified-stamp';
-        el.textContent = 'CLASSIFIED';
-        tacOverlay.appendChild(el);
-        return el;
-      })();
-      s.style.top = (8 + Math.random() * 60) + '%';
-      s.style.right = (5 + Math.random() * 20) + '%';
-      s.style.transform = `rotate(${-20 + Math.random() * 40}deg)`;
-      s.style.opacity = '1';
-      setTimeout(() => { s.style.opacity = '0.25'; }, 1600);
-    }
-  }, 5000);
 
   function switchCam(idx) {
     if (idx === currentCam) return;
@@ -2152,12 +2415,15 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
         off.style.display = 'flex';
         $('#camOffTitle').textContent = cam.offTitle || 'СИГНАЛ ПОТЕРЯН';
         $('#camOffSub').textContent = cam.offSub || 'Канал недоступен.';
-        renderObjects(cam);
+        renderObjects(cam); updateWatchersForCam(cam);
       } else {
         off.style.display = 'none';
         camImg.style.opacity = '';
         camImg.src = cam.src;
         camImg.style.objectFit = 'cover';
+        camImg.onload = function () {
+          /* keep per-object images */
+        };
         camImg.onerror = function () {
           cam.offline = true;
           off.style.display = 'flex';
@@ -2166,7 +2432,7 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
           $('#camOffSub').textContent = 'Файл трансляции повреждён или отсутствует.';
           document.querySelectorAll('.cam-thumb')[idx]?.classList.add('offline');
         };
-        renderObjects(cam);
+        renderObjects(cam); updateWatchersForCam(cam);
       }
       $('#camCount').textContent = '5 КАНАЛОВ · ВЫБРАН: ' + cam.name.split('//')[0].trim();
       $('#camSector').textContent = cam.sector;
@@ -2415,6 +2681,171 @@ main.sys-page { display: block !important; position: relative; z-index: 2; }
         if (dEl) dEl.textContent = depth;
       }
 
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+
+  // keep object crops in sync with main feed
+  const camMainImgEl = document.getElementById('camMainImg');
+  if (camMainImgEl) {
+    camMainImgEl.addEventListener('load', () => {
+      /* keep per-object images */
+    });
+  }
+
+
+  // auto-rotate multi-frame cameras every 2 minutes
+  let frameIdx = 0;
+  setInterval(() => {
+    const cam = cameras[currentCam];
+    if (!cam || cam.offline || !cam.frames || cam.frames.length < 2) return;
+    frameIdx = (frameIdx + 1) % cam.frames.length;
+    const img = document.getElementById('camMainImg');
+    if (img) {
+      const wrap = document.querySelector('.cam-main');
+      if (wrap) wrap.classList.add('switching');
+      setTimeout(() => {
+        img.src = cam.frames[frameIdx];
+        if (wrap) wrap.classList.remove('switching');
+        /* keep per-object images */
+      }, 200);
+    }
+  }, 120000);
+
+
+  // rotate images INSIDE object cells every 2 minutes
+  setInterval(() => {
+    const cam = cameras[currentCam];
+    if (!cam || cam.offline || !cam.objects) return;
+    cam.objects.forEach(obj => {
+      if (!obj.frames || obj.frames.length < 2) return;
+      obj._fi = ((obj._fi || 0) + 1) % obj.frames.length;
+    });
+    renderObjects(cam); updateWatchersForCam(cam);
+  }, 120000);
+
+
+  // ── Object reshuffle + signal glitch (main + cells) ──
+  setInterval(() => {
+    const cam = cameras[typeof currentCam !== 'undefined' ? currentCam : 0];
+    if (!cam || cam.offline) return;
+    // reshuffle positions & data
+    if (typeof renderObjects === 'function') renderObjects(cam); updateWatchersForCam(cam);
+  }, 90000); // every 1.5 min move boxes
+
+  const SIG_ERRORS = [
+    { title: 'СИГНАЛ ПОТЕРЯН', sub: 'Канал недоступен.' },
+    { title: 'КАНАЛ ЗАГЛУШЁН', sub: 'Ответ станции отсутствует. Вероятна атака на ретранслятор.' },
+    { title: 'ПОМЕХИ НА ЛИНИИ', sub: 'AES-туннель деградировал. Переподключение…' },
+    { title: 'ПЕРЕГРУЗКА БУФЕРА', sub: 'Кадры повреждены. Ожидание восстановления потока.' },
+    { title: 'INTRUSION DETECTED', sub: 'Внешний вектор. Маска трассы временно снята.' },
+  ];
+  function flashCamError(duration) {
+    const el = document.getElementById('camSignalError');
+    const cam = cameras[currentCam];
+    if (!el || (cam && cam.offline)) return;
+    const err = SIG_ERRORS[Math.floor(Math.random() * SIG_ERRORS.length)];
+    const t = document.getElementById('camSigTitle');
+    const s = document.getElementById('camSigSub');
+    if (t) t.textContent = err.title;
+    if (s) s.textContent = err.sub;
+    el.hidden = false;
+    const main = document.getElementById('camMain');
+    if (main) main.classList.add('glitching');
+    if (typeof camGlitch === 'function') camGlitch();
+    setTimeout(() => {
+      el.hidden = true;
+      if (main) main.classList.remove('glitching');
+    }, duration || (1200 + Math.random() * 1800));
+  }
+  setInterval(() => {
+    const boxes = document.querySelectorAll('.obj-box');
+    boxes.forEach(b => b.classList.remove('glitching', 'signal-lost'));
+    if (boxes.length && Math.random() > 0.4) {
+      const n = 1 + Math.floor(Math.random() * Math.min(2, boxes.length));
+      [...boxes].sort(() => Math.random() - 0.5).slice(0, n).forEach((b, i) => {
+        const mode = Math.random() > 0.35 ? 'glitching' : 'signal-lost';
+        setTimeout(() => {
+          b.classList.add(mode);
+          setTimeout(() => b.classList.remove('glitching', 'signal-lost'), 900 + Math.random() * 1600);
+        }, i * 100);
+      });
+    }
+    // main: soft glitch or full error screen
+    if (cameras[currentCam] && !cameras[currentCam].offline) {
+      const r = Math.random();
+      if (r > 0.82) {
+        flashCamError();
+      } else if (r > 0.45 && typeof camGlitch === 'function') {
+        camGlitch();
+        const img = document.getElementById('camMainImg');
+        if (img) {
+          img.style.filter = 'contrast(1.7) saturate(0.35) hue-rotate(55deg) blur(1.2px)';
+          setTimeout(() => { img.style.filter = ''; }, 350 + Math.random() * 700);
+        }
+      }
+    }
+  }, 6500 + Math.random() * 4500);
+
+
+
+  /* ═══ NEURO-BRIDGE WAVEFORM ═══ */
+  (function () {
+    const c = document.getElementById('neuroCanvas');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    let t = 0;
+    const waves = [
+      { amp: 22, freq: 0.018, speed: 0.035, color: 'rgba(0,212,232,0.85)', w: 1.6 },
+      { amp: 16, freq: 0.027, speed: 0.048, color: 'rgba(224,26,111,0.65)', w: 1.3 },
+      { amp: 12, freq: 0.041, speed: 0.062, color: 'rgba(232,160,32,0.55)', w: 1.1 },
+      { amp: 8,  freq: 0.055, speed: 0.08,  color: 'rgba(30,201,154,0.45)', w: 1.0 },
+      { amp: 18, freq: 0.013, speed: 0.025, color: 'rgba(0,212,232,0.25)', w: 2.2 },
+    ];
+    function resize() {
+      const r = c.getBoundingClientRect();
+      c.width = Math.max(400, Math.floor(r.width * 2));
+      c.height = 140;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    function draw() {
+      t += 1;
+      const W = c.width, H = c.height, mid = H * 0.52;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = 'rgba(0,212,232,0.06)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+      for (let y = 0; y < H; y += 28) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+      ctx.strokeStyle = 'rgba(0,212,232,0.12)';
+      ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(W, mid); ctx.stroke();
+      waves.forEach((w, wi) => {
+        ctx.beginPath();
+        ctx.strokeStyle = w.color;
+        ctx.lineWidth = w.w;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = w.color;
+        for (let x = 0; x <= W; x += 2) {
+          const y = mid
+            + Math.sin(x * w.freq + t * w.speed + wi * 1.1) * w.amp
+            + Math.sin(x * w.freq * 2.3 + t * w.speed * 0.7) * (w.amp * 0.35)
+            + Math.sin(x * 0.008 + t * 0.02 + wi) * 4;
+          if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      });
+      ctx.shadowBlur = 0;
+      for (let k = 0; k < 5; k++) {
+        const x = ((t * 1.7 + k * 160) % (W + 40)) - 20;
+        const y = mid + Math.sin(x * 0.02 + t * 0.04) * 14;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, 10);
+        g.addColorStop(0, 'rgba(0,212,232,0.7)');
+        g.addColorStop(1, 'transparent');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI * 2); ctx.fill();
+      }
       requestAnimationFrame(draw);
     }
     draw();

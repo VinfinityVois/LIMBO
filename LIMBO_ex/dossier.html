@@ -280,7 +280,7 @@
 /* Visual */
 .char-visual {
   position: relative;
-  height: 260px;
+  height: 360px;
   background: linear-gradient(160deg, #100828 0%, #05020c 100%);
   overflow: hidden;
 }
@@ -294,8 +294,8 @@
 }
 .char-visual img {
   width: 100%; height: 100%;
-  object-fit: cover; object-position: top center;
-  opacity: 0.92; position: relative; z-index: 1;
+  object-fit: cover; object-position: center top;
+  opacity: 1; position: relative; z-index: 1;
   filter: grayscale(20%) contrast(1.08);
   transition: transform 0.7s var(--ease), filter 0.4s;
 }
@@ -643,6 +643,70 @@
   94%           { opacity: 0.4; }
   96%           { opacity: 0.8; }
 }
+
+.modal-section.glitch-intel h4 { color: var(--red); opacity: 0.85; }
+.modal-section.glitch-intel li.glitch-line {
+  position: relative;
+  color: transparent;
+  user-select: none;
+}
+.modal-section.glitch-intel li.glitch-line span {
+  color: var(--text-dim);
+  filter: blur(0.55px);
+  opacity: 0.45;
+  animation: intelNoise 2.8s steps(2) infinite;
+  display: inline-block;
+  max-width: 100%;
+}
+.modal-section.glitch-intel li.glitch-line:nth-child(odd) span {
+  animation-duration: 2.1s;
+  opacity: 0.32;
+  letter-spacing: 0.04em;
+}
+.modal-section.glitch-intel li.glitch-line:nth-child(3n) span {
+  text-shadow: 1px 0 rgba(224,40,72,0.35), -1px 0 rgba(0,212,232,0.25);
+  opacity: 0.55;
+}
+@keyframes intelNoise {
+  0%, 100% { filter: blur(0.7px); transform: translate(0,0); opacity: 0.35; }
+  25% { filter: blur(0); transform: translate(0.6px, -0.3px); opacity: 0.6; }
+  50% { filter: blur(1px); transform: translate(-0.5px, 0.4px); opacity: 0.25; }
+  75% { filter: blur(0.3px); transform: translate(0.3px, 0.2px); opacity: 0.5; }
+}
+
+
+.modal-section.glitch-intel h4 {
+  color: var(--red);
+  opacity: 0.9;
+  text-shadow: 0 0 12px rgba(224,40,72,0.5);
+  animation: titleGlitch 2.5s steps(2) infinite;
+}
+@keyframes titleGlitch {
+  0%, 90%, 100% { transform: none; opacity: 0.9; }
+  91% { transform: translate(2px, -1px); opacity: 0.6; }
+  93% { transform: translate(-2px, 1px); opacity: 1; }
+  95% { transform: translate(1px, 0); }
+}
+.modal-section.glitch-intel li.glitch-line {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  border-left: 1px solid rgba(224,40,72,0.25);
+  padding-left: 0.5rem;
+  margin: 0.35rem 0;
+  min-height: 1.35em;
+}
+.modal-section.glitch-intel .scramble {
+  color: var(--text-dim);
+  text-shadow: 1px 0 rgba(224,40,72,0.45), -1px 0 rgba(0,212,232,0.3);
+  filter: contrast(1.2);
+}
+.modal-section.glitch-intel .scramble.hot {
+  color: var(--red);
+  opacity: 0.85;
+}
+
+.char-visual { height: 360px !important; }
+.char-visual img { object-fit: cover; object-position: center 15%; opacity: 1 !important; }
 </style>
 </head>
 <body>
@@ -789,37 +853,38 @@
       code: 'A-55',
       number: '#001',
       name: 'ХЭ ЮЧОУ',
+      portrait: 'assets/img/Хэ Ючоу.png',
       role: 'СМОТРЯЩИЙ A-55 · ВОСТОЧНЫЙ ШТАБ',
       division: 'east',
       divisionName: 'ВОСТОК',
       status: { label: 'NOMINAL', color: 'green', rail: '' },
       synced: 94.2,
-      age: '27 лет', birth: '07.10',
+      age: '27 лет', birth: '07.10.2012',
       psi: 97,
-      psiStatus: 'ОПТИМАЛЬНАЯ', psiColor: 'green',
+      psiStatus: 'ВЫСОКАЯ', psiColor: 'green',
       threat: 42,
       tags: [
         { t: '#ВОСТОЧНЫЙ_ШТАБ', c: '' },
         { t: '#ЭЛИТНЫЙ_НАДЗИРАТЕЛЬ', c: '' },
         { t: '#ЭКС_ПОЛИЦИЯ', c: '' }
       ],
-      bio: 'Один из самых результативных следователей спецподразделения, досрочно ушедший в отставку в 24 года после засекреченного инцидента. Переведён в Восточный штаб в качестве старшего Смотрящего сектора А.',
+      bio: 'Бывший сотрудник полиции. В 24 года ушёл в отставку после несчастного случая; через полгода принят в Восточный штаб Смотрящим A-55.',
       visualChips: [
         { t: 'СИНХР: 94.2%', c: 'cyan' },
-        { t: 'СТАБИЛЬНОСТЬ: 97%', c: '' }
+        { t: 'ИЗУЧЕННОСТЬ: 97%', c: '' }
       ],
       placeholder: { text: 'A-55', color: 'rgba(0,212,232,0.12)' },
       modalExtra: {
         history: [
-          '2019 — Поступление в федеральную академию спецподразделения.',
-          '2022 — Засекреченный инцидент «Тихий берег». Досрочная отставка.',
-          '2023 — Вербовка П.Р.И.Н.Ц. Прямое назначение в Восточный штаб.',
-          '2024 — Старший Смотрящий сектора А. 27 успешных операций.'
+          '2036 — Уход из полиции в 24 года после несчастного случая.',
+          '2036–2037 — Вербовка П.Р.И.Н.Ц.; через ~6 месяцев — Восточный штаб.',
+          '2037 — Назначение Смотрящим A-55, допуск к Сценам тома 1.',
+          '2038–2039 — Операции в Сценах «Рёкан», «Шанхай», «Тихое место».'
         ],
         notes: [
-          'Сохраняет исключительную выдержку под сенсорной нагрузкой.',
-          'Отказывается от прямых контактов с Сюань У.',
-          'Пси-профиль: гиперстабильный, редкая форма.'
+          'Быстрая реакция в критических ситуациях.',
+          'Уверенное владение огнестрельным оружием.',
+          'Способность быстро разобраться в обстановке и выстроить приоритеты.'
         ]
       }
     },
@@ -828,12 +893,13 @@
       code: 'A-89',
       number: '#002',
       name: 'ЦАЙ ЛАНЬ',
+      portrait: 'assets/img/Цай Лань.png',
       role: 'СМОТРЯЩИЙ A-89 · ВОСТОЧНЫЙ ШТАБ',
       division: 'east',
       divisionName: 'ВОСТОК',
       status: { label: 'CRITICAL', color: 'red', rail: 'red' },
       synced: 99.8,
-      age: '24 года', birth: '12.09',
+      age: '24 года', birth: '12.09.2015',
       psi: 31,
       psiStatus: 'ВЫСОКИЙ РИСК СРЫВА', psiColor: 'red',
       threat: 88,
@@ -868,6 +934,7 @@
       code: 'D-63',
       number: '#003',
       name: 'СЕЛИНА ВЕГА',
+      portrait: 'assets/img/Селина Вега.png',
       role: 'СМОТРЯЩАЯ D-63 · ЗАПАДНЫЙ ШТАБ',
       division: 'west',
       divisionName: 'ЗАПАД',
@@ -907,6 +974,7 @@
       code: 'D-28',
       number: '#004',
       name: 'НАТАН КОИКЭ',
+      portrait: 'assets/img/Натан Коикэ.png',
       role: 'АССИСТЕНТ D-28 · ЗАПАДНЫЙ ШТАБ',
       division: 'west',
       divisionName: 'ЗАПАД',
@@ -946,14 +1014,15 @@
       code: 'A-22',
       number: '#005',
       name: 'ЦАЙ ФЭЙ',
+      portrait: 'assets/img/Цай Фэй.png',
       role: 'АССИСТЕНТ A-22 · ВОСТОЧНЫЙ ШТАБ',
       division: 'east',
       divisionName: 'ВОСТОК',
       status: { label: 'ACTIVE', color: 'green', rail: '' },
       synced: 96.6,
-      age: '24 года', birth: '12.09',
+      age: '24 года', birth: '12.09.2015',
       psi: 85,
-      psiStatus: 'АНАЛИТИКА АКТИВНА', psiColor: 'green',
+      psiStatus: 'АНАЛИТИКА', psiColor: 'green',
       threat: 18,
       tags: [
         { t: '#ВОСТОЧНЫЙ_ШТАБ', c: '' },
@@ -974,9 +1043,9 @@
           '2024 — Тех. аналитик А-22, куратор брата.'
         ],
         notes: [
-          'Аналитические способности — максимум по штабу.',
-          'Работает с ядром через защищённые каналы.',
-          'Фактически оплачивает жизнеобеспечение брата.'
+          'Высокий уровень IQ, сильная аналитика.',
+          'Быстрая реакция на данные телеметрии.',
+          'Не способен здраво мыслить, будучи ассистентом брата — рекомендуется разделять их.'
         ]
       }
     },
@@ -985,14 +1054,16 @@
       code: 'ZERO',
       number: '#006 // NULL',
       name: 'СЮАНЬ У',
-      role: 'ДАННЫЕ ПОВРЕЖДЕНЫ · ВОСТОЧНЫЙ РЕГИОН',
+      portrait: 'assets/img/Сюань У.png',
+      role: '/ДАННЫЕ ПОВРЕЖДЕНЫ/ · ВОСТОЧНЫЙ РЕГИОН',
+      glitchIntel: true,
       division: 'anomaly',
       divisionName: 'ANOMALY',
       status: { label: 'ANOMALY', color: 'red', rail: 'red' },
       synced: 0,
       age: '??', birth: '??',
       psi: 0,
-      psiStatus: 'ДЕСТАБИЛИЗИРОВАН', psiColor: 'red',
+      psiStatus: 'НЕТ ДАННЫХ', psiColor: 'red',
       threat: 100,
       tags: [
         { t: '#КЛАСС_ZERO', c: 'red' },
@@ -1056,7 +1127,10 @@
 
       <div class="char-visual">
         <div class="grid-bg"></div>
-        <div class="placeholder-code" style="color:${s.placeholder.color}">${s.placeholder.text}</div>
+        ${s.portrait
+          ? `<img src="${s.portrait}" alt="${s.name}" onerror="this.style.display='none'">`
+          : `<div class="placeholder-code" style="color:${s.placeholder.color}">${s.placeholder.text}</div>`}
+        ${!s.portrait ? '' : `<div class="placeholder-code" style="color:${s.placeholder.color};pointer-events:none;opacity:0.15">${s.placeholder.text}</div>`}
 
         <div class="visual-overlay">
           ${s.visualChips.map(c => `<span class="chip ${c.c}">${c.t}</span>`).join('')}
@@ -1109,7 +1183,7 @@
             <span class="pct" style="color:${psiColorVar}">${s.psi}%</span>
           </div>
           <div class="psi-info">
-            <div class="lbl">Пси-стабильность</div>
+            <div class="lbl">Изученность</div>
             <div class="status" style="color:${psiColorVar}">${s.psiStatus}</div>
           </div>
         </div>
@@ -1266,7 +1340,7 @@
         <h4>// БИОМЕТРИЯ</h4>
         <div class="modal-grid">
           <div class="kv"><div class="k">Синхронизация</div><div class="v ${subject.synced > 95 ? 'cyan' : subject.synced > 80 ? 'amber' : 'red'}">${subject.synced.toFixed(1)}%</div></div>
-          <div class="kv"><div class="k">Пси-стабильность</div><div class="v" style="color:${psiColorVar}">${subject.psi}% · ${subject.psiStatus}</div></div>
+          <div class="kv"><div class="k">Изученность</div><div class="v" style="color:${psiColorVar}">${subject.psi}% · ${subject.psiStatus}</div></div>
           <div class="kv"><div class="k">Индекс угрозы</div><div class="v ${subject.threat > 80 ? 'red' : subject.threat > 50 ? 'amber' : 'green'}">${subject.threat}/100</div></div>
           <div class="kv"><div class="k">Статус</div><div class="v ${subject.status.color}">[${subject.status.label}]</div></div>
         </div>
@@ -1274,17 +1348,21 @@
 
       <div class="modal-section">
         <h4>// ОПИСАНИЕ</h4>
-        <p>${subject.bio}</p>
+        <p class="${subject.glitchIntel ? 'scramble' : ''}" ${subject.glitchIntel ? `data-text="${subject.bio.replace(/"/g,'&quot;')}"` : ''}>${subject.bio}</p>
       </div>
 
-      <div class="modal-section">
+      <div class="modal-section${subject.glitchIntel ? ' glitch-intel' : ''}">
         <h4>// ИСТОРИЯ ОПЕРАЦИЙ</h4>
-        <ul>${subject.modalExtra.history.map(h => `<li>${h}</li>`).join('')}</ul>
+        <ul>${subject.modalExtra.history.map(h => subject.glitchIntel
+          ? `<li class="glitch-line"><span class="scramble" data-text="${h.replace(/"/g,'&quot;')}">${h}</span></li>`
+          : `<li>${h}</li>`).join('')}</ul>
       </div>
 
-      <div class="modal-section">
+      <div class="modal-section${subject.glitchIntel ? ' glitch-intel' : ''}">
         <h4>// АНАЛИТИЧЕСКИЕ ЗАМЕТКИ</h4>
-        <ul>${subject.modalExtra.notes.map(n => `<li>${n}</li>`).join('')}</ul>
+        <ul>${subject.modalExtra.notes.map(n => subject.glitchIntel
+          ? `<li class="glitch-line"><span class="scramble" data-text="${n.replace(/"/g,'&quot;')}">${n}</span></li>`
+          : `<li>${n}</li>`).join('')}</ul>
       </div>
 
       <div class="modal-section">
@@ -1300,9 +1378,39 @@
       </div>
     `;
     modal.classList.add('open');
+    if (subject.glitchIntel) startScramble();
+    else stopScramble();
+  }
+
+
+  /* ── ZERO subject: live glyph scramble ── */
+  const GLYPHS = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ01█░▒▓#@$%&<>/\\|?*№ΞΨΩ';
+  let scrambleTimer = null;
+  function stopScramble() {
+    if (scrambleTimer) { clearInterval(scrambleTimer); scrambleTimer = null; }
+  }
+  function startScramble() {
+    stopScramble();
+    const tick = () => {
+      document.querySelectorAll('#modalBody .scramble').forEach(el => {
+        const orig = el.getAttribute('data-text') || '';
+        if (!orig) return;
+        let out = '';
+        for (let i = 0; i < orig.length; i++) {
+          const ch = orig[i];
+          if (' —.,·-'.includes(ch)) { out += ch; continue; }
+          out += (Math.random() > 0.18) ? GLYPHS[(Math.random() * GLYPHS.length) | 0] : ch;
+        }
+        el.textContent = out;
+        el.classList.toggle('hot', Math.random() > 0.6);
+      });
+    };
+    tick();
+    scrambleTimer = setInterval(tick, 45);
   }
 
   function closeModal() {
+    stopScramble();
     modal.classList.remove('open');
   }
 
